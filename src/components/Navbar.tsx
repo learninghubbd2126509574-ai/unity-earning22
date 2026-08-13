@@ -17,12 +17,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   const WHATSAPP_LINK = "https://wa.me/8801600602084?text=%E0%A6%86%E0%A6%AE%E0%A6%BF%20Unity%20Earning%20%E0%A6%8F%20%E0%A6%AF%E0%A7%81%E0%A6%95%E0%A7%8D%E0%A6%A4%20%E0%A6%B9%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A6%A4%E0%A7%87%E0%A6%9B%E0%A6%B8%E0%A6%BF%E0%A6%B2%E0%A6%BE%E0%A6%AE%E0%A7%8D%E0%A4%A";
 
   return (
-    <header className="sticky top-0 z-40 bg-[#0a0813]/90 backdrop-blur-md border-b border-white/10">
+    <header className="sticky top-0 z-40 bg-[#0a0813]/95 backdrop-blur-md border-b border-white/5">
       {/* Top Banner Notice */}
-      <div className="bg-gradient-to-r from-amber-500/20 via-indigo-600/30 to-emerald-500/20 text-xs py-1.5 px-4 text-center text-amber-200 border-b border-amber-500/20 flex items-center justify-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse shrink-0" />
+      <div className="bg-emerald-500/10 text-xs py-2 px-4 text-center text-emerald-300 flex items-center justify-center gap-2">
+        <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
         <span>মেম্বারশিপের সাথে পাচ্ছেন <strong>৩০০ টাকা ইনস্ট্যান্ট ক্যাশব্যাক</strong> অফার!</span>
-        <span className="hidden sm:inline-block bg-amber-400 text-black font-bold px-1.5 py-0.5 rounded text-[10px]">সীমিত সময়</span>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">

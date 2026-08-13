@@ -54,12 +54,8 @@ export const OfferCard: React.FC<OfferCardProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center py-6 px-3 min-h-[calc(100vh-60px)]">
-      {/* Compact Card Container Inspired by Hostinger SaaS Design */}
-      <div className="w-full max-w-[410px] bg-[#130f26] rounded-2xl border border-white/10 shadow-2xl shadow-indigo-950/80 overflow-hidden p-5 sm:p-6 transition-all relative">
-        
-        {/* Glow ambient background effect */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-600/20 blur-3xl rounded-full pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-purple-600/20 blur-3xl rounded-full pointer-events-none" />
+      {/* Compact Card Container */}
+      <div className="w-full max-w-[420px] bg-[#0c0a18] rounded-3xl border border-white/5 shadow-2xl overflow-hidden p-6 sm:p-8 transition-all relative">
 
         {/* Top Offer Badge & Countdown */}
         <div className="flex items-center justify-between gap-2 mb-3.5 relative">
@@ -83,32 +79,29 @@ export const OfferCard: React.FC<OfferCardProps> = ({
           </p>
         </div>
 
-        {/* Pricing Area */}
-        <div className="my-5 p-3.5 bg-[#1a1533]/80 rounded-xl border border-white/5 relative">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-xs text-gray-400 line-through font-medium">১১০০ টাকা</div>
-              <div className="text-3xl font-extrabold text-white flex items-baseline gap-1 mt-0.5">
-                <span className="text-amber-300">{currentPrice}</span> <span className="text-xs text-gray-400 font-normal">টাকা / মেম্বারশিপ</span>
+        {/* Highlighted Pricing Area */}
+        <div className="my-6 border border-amber-500/40 rounded-2xl bg-gradient-to-b from-amber-500/10 to-transparent relative overflow-hidden">
+          <div className="p-5">
+            <div className="flex items-start justify-between mb-3">
+              <span className="inline-flex items-center gap-1 bg-amber-400 text-black text-[11px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wide">
+                <Sparkles className="w-3 h-3" />
+                শুধুমাত্র আজকের জন্য
+              </span>
+              <div className="text-right">
+                <span className="text-xs text-gray-500 line-through font-medium">১১০০ টাকা</span>
               </div>
             </div>
-            
-            <div className="text-right">
-              <span className="inline-block bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-500/30">
-                এককালীন মেম্বারশিপ
-              </span>
-            </div>
-          </div>
 
-          {/* Cashback Banner Box */}
-          <div className="mt-3 bg-emerald-500/15 border border-dashed border-emerald-500/40 text-emerald-300 px-3 py-2 rounded-lg text-xs font-bold flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-emerald-400 animate-bounce" />
-              <span>🎁 {currentPrice === 599 ? '৪০০' : '৩০০'} টাকা ইনস্ট্যান্ট ক্যাশব্যাক</span>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <span className="text-5xl font-extrabold text-amber-400">{currentPrice}</span>
+              <span className="text-sm text-gray-400 font-medium">টাকা / লাইফটাইম</span>
             </div>
-            <span className="text-[10px] bg-emerald-500/30 text-emerald-200 px-1.5 py-0.5 rounded">
-              তাৎক্ষণিক
-            </span>
+            
+            {/* Cashback Banner Box */}
+            <div className="mt-5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 px-3 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-inner">
+              <Check className="w-4 h-4 text-emerald-400" />
+              <span>🎁 ৩০০ টাকা ইনস্ট্যান্ট ক্যাশব্যাক নিশ্চিত!</span>
+            </div>
           </div>
         </div>
 

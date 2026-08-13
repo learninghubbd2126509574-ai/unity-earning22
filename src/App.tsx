@@ -6,7 +6,6 @@ import { IncomeCalculator } from './components/IncomeCalculator';
 import { CourseCatalog } from './components/CourseCatalog';
 import { LivePayoutTicker } from './components/LivePayoutTicker';
 import { FAQSection } from './components/FAQSection';
-import { SupportFloatingBar } from './components/SupportFloatingBar';
 import { AdminModal } from './components/AdminModal';
 import { Sparkles, MessageCircle, ShieldCheck, Heart, Award, CheckCircle, Lock } from 'lucide-react';
 
@@ -148,7 +147,7 @@ export default function App() {
             <span>•</span>
             <span>মেম্বারশিপ: {currentPrice}৳ (৫৫% ছাড়)</span>
             <span>•</span>
-            <span>ক্যাশব্যাক: {currentPrice === 599 ? '৪০০' : '৩০০'}৳</span>
+            <span>ক্যাশব্যাক: ৩০০৳</span>
           </div>
 
           <div className="text-[10px] text-gray-500 w-full text-center flex flex-col md:flex-row items-center justify-center gap-2 mt-4 md:mt-0">
@@ -179,13 +178,6 @@ export default function App() {
         onClose={() => setIsAdminOpen(false)}
         currentPrice={currentPrice}
         onUpdatePrice={setCurrentPrice}
-      />
-
-      {/* Sticky Mobile/Desktop WhatsApp Floating Bar */}
-      <SupportFloatingBar
-        onOpenActivation={() => setIsActivationOpen(true)}
-        currentPrice={currentPrice}
-        onOpenAdmin={() => setIsAdminOpen(true)}
       />
 
     </div>

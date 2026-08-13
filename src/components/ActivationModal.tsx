@@ -26,7 +26,7 @@ export const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClos
   };
 
   const handleSendWhatsApp = () => {
-    const message = `Hello Unity Earning Team,\nI have completed my membership payment!\n\n📌 *Member Details:*\n- Name: ${name || 'N/A'}\n- Phone: ${phone || 'N/A'}\n- Payment Method: ${method}\n- Transaction ID: ${trxId || 'N/A'}\n- Package: Unity Earning Special Offer (${currentPrice} Tk)\n- Cashback Request: ${currentPrice === 599 ? 400 : 300} Tk Instant Cashback\n\nPlease activate my account ID as soon as possible. Thank you!`;
+    const message = `Hello Unity Earning Team,\nI have completed my membership payment!\n\n📌 *Member Details:*\n- Name: ${name || 'N/A'}\n- Phone: ${phone || 'N/A'}\n- Payment Method: ${method}\n- Transaction ID: ${trxId || 'N/A'}\n- Package: Unity Earning Special Offer (${currentPrice} Tk)\n- Cashback Request: 300 Tk Instant Cashback\n\nPlease activate my account ID as soon as possible. Thank you!`;
     const encoded = encodeURIComponent(message);
     window.open(`https://wa.me/8801600602084?text=${encoded}`, '_blank');
     setSubmitted(true);
