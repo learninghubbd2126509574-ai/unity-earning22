@@ -92,16 +92,17 @@ export const OfferCard: React.FC<OfferCardProps> = ({
               </span>
               <div className="text-right flex flex-col items-end">
                 <span className="text-[11px] text-gray-400 font-bold mb-0.5 uppercase tracking-wide">রেগুলার প্রাইস:</span>
-                <span className="text-base text-red-400 line-through decoration-red-500/70 decoration-2 font-black">১১০০ টাকা</span>
+                <span className="text-base text-red-400 line-through decoration-red-500/70 decoration-2 font-black">১১০০ ৳</span>
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-2">
               <div className="flex items-baseline gap-2">
-                <span className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-200 drop-shadow-sm">{currentPrice}</span>
-                <div className="flex flex-col">
-                  <span className="text-lg text-amber-100 font-bold leading-none mb-1">টাকা</span>
-                  <span className="text-[11px] bg-white/10 text-white px-2 py-0.5 rounded font-bold uppercase tracking-widest border border-white/20">লাইফ টাইম</span>
+                <span className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-200 drop-shadow-sm">
+                  {currentPrice}<span className="text-4xl font-bold ml-1">৳</span>
+                </span>
+                <div className="flex flex-col pb-1.5">
+                  <span className="text-[11px] bg-white/10 text-white px-2 py-1 rounded font-bold uppercase tracking-widest border border-white/20">লাইফ টাইম এক্সেস</span>
                 </div>
               </div>
             </div>
