@@ -18,7 +18,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
 }) => {
   const WHATSAPP_LINK = "https://wa.me/8801600602084?text=%E0%A6%86%E0%A6%AE%E0%A6%BF%20Unity%20Earning%20%E0%A6%8F%20%E0%A6%AF%E0%A7%81%E0%A6%95%E0%A7%8D%E0%A6%A4%20%E0%A6%B9%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A6%A4%E0%A7%87%E0%A6%9B%E0%A6%B8%E0%A6%BF%E0%A6%B2%E0%A6%BE%E0%A6%AE%E0%A7%8D%E0%A4%A";
 
-  const [copiedNumber, setCopiedNumber] = useState(false);
+  const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState({ hours: 4, minutes: 28, seconds: 45 });
 
   // Countdown timer effect
@@ -36,8 +36,8 @@ export const OfferCard: React.FC<OfferCardProps> = ({
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
-    setCopiedNumber(true);
-    setTimeout(() => setCopiedNumber(false), 2000);
+    setCopiedNumber(text);
+    setTimeout(() => setCopiedNumber(null), 2000);
   };
 
   const coursesList = [
@@ -80,26 +80,35 @@ export const OfferCard: React.FC<OfferCardProps> = ({
         </div>
 
         {/* Highlighted Pricing Area */}
-        <div className="my-6 border border-amber-500/40 rounded-2xl bg-gradient-to-b from-amber-500/10 to-transparent relative overflow-hidden">
-          <div className="p-5">
-            <div className="flex items-start justify-between mb-3">
-              <span className="inline-flex items-center gap-1 bg-amber-400 text-black text-[11px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wide">
-                <Sparkles className="w-3 h-3" />
+        <div className="my-7 -mx-4 sm:-mx-6 border-y border-amber-500/50 bg-gradient-to-br from-amber-500/15 via-[#1a1333] to-indigo-900/30 relative overflow-hidden shadow-2xl shadow-amber-500/10">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/20 blur-3xl rounded-full pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/20 blur-3xl rounded-full pointer-events-none" />
+          
+          <div className="p-6 relative z-10">
+            <div className="flex items-start justify-between mb-4">
+              <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-black text-[12px] font-black px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg shadow-amber-500/20 animate-pulse">
+                <Sparkles className="w-3.5 h-3.5" />
                 শুধুমাত্র আজকের জন্য
               </span>
-              <div className="text-right">
-                <span className="text-xs text-gray-500 line-through font-medium">১১০০ টাকা</span>
+              <div className="text-right flex flex-col items-end">
+                <span className="text-[11px] text-gray-400 font-bold mb-0.5 uppercase tracking-wide">রেগুলার প্রাইস:</span>
+                <span className="text-base text-red-400 line-through decoration-red-500/70 decoration-2 font-black">১১০০ টাকা</span>
               </div>
             </div>
 
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <span className="text-5xl font-extrabold text-amber-400">{currentPrice}</span>
-              <span className="text-sm text-gray-400 font-medium">টাকা / লাইফটাইম</span>
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-2">
+              <div className="flex items-baseline gap-2">
+                <span className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-200 drop-shadow-sm">{currentPrice}</span>
+                <div className="flex flex-col">
+                  <span className="text-lg text-amber-100 font-bold leading-none mb-1">টাকা</span>
+                  <span className="text-[11px] bg-white/10 text-white px-2 py-0.5 rounded font-bold uppercase tracking-widest border border-white/20">লাইফ টাইম</span>
+                </div>
+              </div>
             </div>
             
             {/* Cashback Banner Box */}
-            <div className="mt-5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 px-3 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-inner">
-              <Check className="w-4 h-4 text-emerald-400" />
+            <div className="mt-6 bg-gradient-to-r from-emerald-500/20 to-emerald-400/10 border border-emerald-500/40 text-emerald-300 px-4 py-3 rounded-xl text-sm font-black flex items-center justify-center gap-2.5 shadow-inner">
+              <Check className="w-5 h-5 text-emerald-400" />
               <span>🎁 ৩০০ টাকা ইনস্ট্যান্ট ক্যাশব্যাক নিশ্চিত!</span>
             </div>
           </div>
@@ -129,18 +138,33 @@ export const OfferCard: React.FC<OfferCardProps> = ({
         </div>
 
         {/* Quick Payment Number Copy Box */}
-        <div className="bg-[#1a1533] p-2.5 rounded-lg border border-white/5 flex items-center justify-between gap-2 mb-4">
-          <div className="text-[11px]">
-            <span className="text-gray-400">বিকাশ/নগদ (পার্সোনাল): </span>
-            <strong className="text-amber-300 font-mono">01600602084</strong>
+        <div className="bg-[#1a1533] p-2.5 rounded-lg border border-white/5 flex flex-col gap-2 mb-4">
+          <div className="flex items-center justify-between">
+            <div className="text-[11px]">
+              <span className="text-gray-400">বিকাশ পার্সোনাল: </span>
+              <strong className="text-amber-300 font-mono text-xs">01723046648</strong>
+            </div>
+            <button
+              onClick={() => handleCopy('01723046648')}
+              className="bg-white/10 hover:bg-white/20 text-white text-[10px] px-2 py-1 rounded font-medium flex items-center gap-1 transition-colors"
+            >
+              <Copy className="w-3 h-3 text-indigo-300" />
+              <span>{copiedNumber === '01723046648' ? 'কপি হয়েছে!' : 'কপি করুন'}</span>
+            </button>
           </div>
-          <button
-            onClick={() => handleCopy('01600602084')}
-            className="bg-white/10 hover:bg-white/20 text-white text-[10px] px-2 py-1 rounded font-medium flex items-center gap-1 transition-colors"
-          >
-            <Copy className="w-3 h-3 text-indigo-300" />
-            <span>{copiedNumber ? 'কপি হয়েছে!' : 'কপি করুন'}</span>
-          </button>
+          <div className="flex items-center justify-between">
+            <div className="text-[11px]">
+              <span className="text-gray-400">নগদ/উপায় পার্সোনাল: </span>
+              <strong className="text-amber-300 font-mono text-xs">01339786909</strong>
+            </div>
+            <button
+              onClick={() => handleCopy('01339786909')}
+              className="bg-white/10 hover:bg-white/20 text-white text-[10px] px-2 py-1 rounded font-medium flex items-center gap-1 transition-colors"
+            >
+              <Copy className="w-3 h-3 text-indigo-300" />
+              <span>{copiedNumber === '01339786909' ? 'কপি হয়েছে!' : 'কপি করুন'}</span>
+            </button>
+          </div>
         </div>
 
         <div className="h-px bg-white/10 my-4" />

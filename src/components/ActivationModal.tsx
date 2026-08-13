@@ -8,7 +8,7 @@ interface ActivationModalProps {
 }
 
 export const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClose, currentPrice }) => {
-  const [method, setMethod] = useState<'bKash' | 'Nagad' | 'Rocket'>('bKash');
+  const [method, setMethod] = useState<'bKash' | 'Nagad' | 'Rocket' | 'Upay' | 'mCash'>('bKash');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [trxId, setTrxId] = useState('');
@@ -17,10 +17,21 @@ export const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClos
 
   if (!isOpen) return null;
 
-  const PAYMENT_NUMBER = "01600602084";
+  const getPaymentNumber = () => {
+    switch (method) {
+      case 'bKash': return '01723046648';
+      case 'Nagad': return '01339786909';
+      case 'Rocket': return '013397869094';
+      case 'Upay': return '01339786909';
+      case 'mCash': return '013397869095';
+      default: return '01723046648';
+    }
+  };
+
+  const currentPaymentNumber = getPaymentNumber();
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(PAYMENT_NUMBER);
+    navigator.clipboard.writeText(currentPaymentNumber);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -66,7 +77,7 @@ export const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClos
                 ১. পেমেন্ট মেথড নির্বাচন করুন:
               </label>
               <div className="grid grid-cols-3 gap-2">
-                {(['bKash', 'Nagad', 'Rocket'] as const).map((m) => (
+                {(['bKash', 'Nagad', 'Rocket', 'Upay', 'mCash'] as const).map((m) => (
                   <button
                     key={m}
                     type="button"
@@ -77,11 +88,15 @@ export const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClos
                           ? 'bg-pink-600/20 border-pink-500 text-pink-300'
                           : m === 'Nagad'
                           ? 'bg-orange-600/20 border-orange-500 text-orange-300'
-                          : 'bg-purple-600/20 border-purple-500 text-purple-300'
+                          : m === 'Rocket'
+                          ? 'bg-purple-600/20 border-purple-500 text-purple-300'
+                          : m === 'Upay'
+                          ? 'bg-blue-600/20 border-blue-500 text-blue-300'
+                          : 'bg-red-600/20 border-red-500 text-red-300'
                         : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
                     }`}
                   >
-                    {m === 'bKash' ? 'বিকাশ' : m === 'Nagad' ? 'নগদ' : 'রকেট'}
+                    {m === 'bKash' ? 'বিকাশ' : m === 'Nagad' ? 'নগদ' : m === 'Rocket' ? 'রকেট' : m === 'Upay' ? 'উপায়' : 'এম ক্যাশ'}
                   </button>
                 ))}
               </div>
@@ -91,8 +106,8 @@ export const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClos
             <div className="bg-[#1a1533] p-3 rounded-xl border border-white/10">
               <div className="flex items-center justify-between text-xs">
                 <div>
-                  <span className="text-gray-400 block text-[11px]">আমাদের পার্সোনাল নম্বর:</span>
-                  <strong className="text-amber-300 text-sm font-mono">{PAYMENT_NUMBER}</strong>
+                  <span className="text-gray-400 block text-[11px]">আমাদের {method} পার্সোনাল নম্বর:</span>
+                  <strong className="text-amber-300 text-sm font-mono">{currentPaymentNumber}</strong>
                 </div>
                 <button
                   type="button"
@@ -104,7 +119,7 @@ export const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClos
                 </button>
               </div>
               <p className="text-[11px] text-gray-400 mt-2">
-                💡 বিকাশ/নগদ/রকেটের <strong className="text-emerald-300">"Send Money"</strong> অপশন থেকে {currentPrice} টাকা সেন্ড করুন।
+                💡 {method} এর <strong className="text-emerald-300">"Send Money"</strong> অপশন থেকে {currentPrice} টাকা সেন্ড করুন।
               </p>
             </div>
 
