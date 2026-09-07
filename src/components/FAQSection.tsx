@@ -1,30 +1,36 @@
 import React, { useState } from 'react';
 import { FAQS } from '../data/platformData';
-import { HelpCircle, ChevronDown, ChevronUp, MessageCircle, PhoneCall } from 'lucide-react';
+import { HelpCircle, ChevronDown, ChevronUp, Send, ShieldCheck } from 'lucide-react';
+import { WhatsAppIcon } from './WhatsAppIcon';
 
 interface FAQSectionProps {
   onOpenActivation: () => void;
+  currentPrice?: number;
 }
 
-export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenActivation }) => {
+export const FAQSection: React.FC<FAQSectionProps> = ({ 
+  onOpenActivation,
+  currentPrice = 599
+}) => {
   const [openId, setOpenId] = useState<string | null>('faq-1');
 
   const toggle = (id: string) => {
     setOpenId(openId === id ? null : id);
   };
 
-  const WHATSAPP_LINK = "https://wa.me/8801600602084?text=%E0%A6%86%E0%A6%AE%E0%A6%BF%20Unity%20Earning%20%E0%A6%8F%20%E0%A6%AF%E0%A7%81%E0%A6%95%E0%A7%8D%E0%A6%A4%20%E0%A6%B9%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A6%A4%E0%A7%87%E0%A6%9B%E0%A6%B8%E0%A6%BF%E0%A6%B2%E0%A6%BE%E0%A6%AE%E0%A7%8D%E0%A4%A";
+  const TELEGRAM_LINK = "https://t.me/unityearning12";
+  const WHATSAPP_CHANNEL_LINK = "https://whatsapp.com/channel/0029VbB4RqI3mFY5nkzbCs0p";
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12 font-['Hind_Siliguri']">
       <div className="text-center max-w-xl mx-auto mb-8">
-        <div className="inline-flex items-center gap-1.5 bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-          <HelpCircle className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center gap-1.5 neu-inset-sm text-blue-700 px-3.5 py-1 rounded-full text-xs font-bold mb-2.5 border border-blue-200/50">
+          <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
           <span>সাধারণ জিজ্ঞাসা ও উত্তর</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-black text-white">সচরাচর জিজ্ঞাসিত প্রশ্নসমূহ</h2>
-        <p className="text-xs sm:text-sm text-gray-400 mt-1">
-          আপনার কোনো প্রশ্ন থাকলে নিচের উত্তরগুলো দেখতে পারেন অথবা সরাসরি হোয়াটসঅ্যাপে যোগাযোগ করতে পারেন
+        <h2 className="text-2xl sm:text-3xl font-black text-[#2C3E50] tracking-tight">সচরাচর জিজ্ঞাসিত প্রশ্নসমূহ</h2>
+        <p className="text-xs sm:text-sm text-slate-600 mt-1 font-medium">
+          আপনার কোনো প্রশ্ন থাকলে নিচের উত্তরগুলো দেখতে পারেন অথবা সরাসরি টেলিগ্রাম ও হোয়াটসঅ্যাপে যোগাযোগ করতে পারেন
         </p>
       </div>
 
@@ -34,22 +40,28 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenActivation }) => {
           return (
             <div
               key={faq.id}
-              className="bg-[#130f26] border border-white/10 rounded-xl overflow-hidden transition-all"
+              className={`rounded-2xl border border-white/80 transition-all duration-200 ${
+                isOpen ? 'neu-inset' : 'neu-flat hover:neu-flat-sm'
+              }`}
             >
               <button
                 onClick={() => toggle(faq.id)}
-                className="w-full p-4 text-left font-bold text-xs sm:text-sm text-white flex items-center justify-between gap-3 hover:bg-white/5 transition-colors cursor-pointer"
+                className="w-full p-4 sm:p-5 text-left font-bold text-xs sm:text-sm text-[#2C3E50] flex items-center justify-between gap-3 cursor-pointer"
               >
                 <span>{faq.question}</span>
                 {isOpen ? (
-                  <ChevronUp className="w-4 h-4 text-indigo-400 shrink-0" />
+                  <div className="w-7 h-7 rounded-full neu-flat-xs flex items-center justify-center text-blue-600 shrink-0">
+                    <ChevronUp className="w-4 h-4" />
+                  </div>
                 ) : (
-                  <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
+                  <div className="w-7 h-7 rounded-full neu-inset-sm flex items-center justify-center text-slate-400 shrink-0">
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
                 )}
               </button>
 
               {isOpen && (
-                <div className="px-4 pb-4 text-xs text-gray-300 leading-relaxed border-t border-white/5 pt-3 bg-[#1a1533]/50">
+                <div className="px-4 sm:px-5 pb-5 text-xs sm:text-[13px] text-slate-600 leading-relaxed pt-1">
                   {faq.answer}
                 </div>
               )}
@@ -58,31 +70,42 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenActivation }) => {
         })}
       </div>
 
-      {/* Support Help Banner */}
-      <div className="bg-gradient-to-r from-[#130f26] via-[#1a1533] to-[#130f26] border border-indigo-500/30 rounded-2xl p-6 text-center space-y-3 shadow-xl">
-        <h3 className="text-base sm:text-lg font-bold text-white">
+      {/* Support Help Banner (Neumorphic) */}
+      <div className="neu-flat rounded-3xl p-6 sm:p-8 text-center space-y-3 border border-white/80">
+        <h3 className="text-base sm:text-lg font-black text-[#2C3E50]">
           আরও কিছু জানতে সরাসরি কথা বলুন আমাদের কাউন্সিলরের সাথে
         </h3>
-        <p className="text-xs text-gray-300 max-w-md mx-auto">
-          আমাদের সাপোর্ট টিম ২৪/৭ লাইভ মেসেজের জন্য প্রস্তুত। বিকাশ বা নগদে পেমেন্ট ও একাউন্ট একটিভেশনে তাৎক্ষণিক সহায়তা নিন।
+        <p className="text-xs text-slate-600 max-w-md mx-auto font-medium">
+          আমাদের সাপোর্ট টিম ২৪/৭ লাইভ মেসেজের জন্য প্রস্তুত। বিকাশ বা নগদে পেমেন্ট ও একাউন্ট এক্টিভেশনে তাৎক্ষণিক সহায়তা নিন।
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
-            href={WHATSAPP_LINK}
+            href={TELEGRAM_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-600/30 flex items-center gap-2 transition-all hover:scale-[1.02]"
+            className="neu-btn-blue text-white text-xs font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all cursor-pointer"
           >
-            <MessageCircle className="w-4 h-4 fill-white" />
-            <span>হোয়াটসঅ্যাপ মেসেজ দিন (01600602084)</span>
+            <Send className="w-4 h-4 fill-white" />
+            <span>টেলিগ্রামে মেসেজ (@unityearning12)</span>
+          </a>
+
+          <a
+            href={WHATSAPP_CHANNEL_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="neu-btn-emerald text-white text-xs font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all cursor-pointer"
+          >
+            <WhatsAppIcon size={16} className="w-4 h-4 text-white" />
+            <span>হোয়াটসঅ্যাপ চ্যানেল</span>
           </a>
 
           <button
             onClick={onOpenActivation}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.02]"
+            className="neu-btn-primary text-white text-xs font-bold px-5 py-2.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer"
           >
-            <span>পেমেন্ট সাবমিট করুন (৪৯৯৳)</span>
+            <ShieldCheck className="w-4 h-4" />
+            <span>পেমেন্ট সাবমিট ({currentPrice}৳)</span>
           </button>
         </div>
       </div>

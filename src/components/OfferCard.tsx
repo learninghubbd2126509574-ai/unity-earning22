@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Check, MessageCircle, Sparkles, Copy, ArrowRight, ShieldCheck, Clock, Zap, Calculator, Lock } from 'lucide-react';
+import { Check, Send, Sparkles, Copy, ArrowRight, ShieldCheck, Clock, Zap, Calculator, CheckCircle2, Award, PartyPopper, Flame } from 'lucide-react';
+import { WhatsAppIcon } from './WhatsAppIcon';
+import { triggerSuccessFeedback, triggerBigOfferCelebration } from '../utils/confettiFeedback';
 
 interface OfferCardProps {
   onOpenActivation: () => void;
@@ -16,10 +18,13 @@ export const OfferCard: React.FC<OfferCardProps> = ({
   currentPrice,
   onOpenAdmin
 }) => {
-  const WHATSAPP_LINK = "https://wa.me/8801600602084?text=%E0%A6%86%E0%A6%AE%E0%A6%BF%20Unity%20Earning%20%E0%A6%8F%20%E0%A6%AF%E0%A7%81%E0%A6%95%E0%A7%8D%E0%A6%A4%20%E0%A6%B9%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A6%A4%E0%A7%87%E0%A6%9B%E0%A6%B8%E0%A6%BF%E0%A6%B2%E0%A6%BE%E0%A6%AE%E0%A7%8D%E0%A4%A";
+  const TELEGRAM_LINK = "https://t.me/unityearning12";
+  const WHATSAPP_CHANNEL_LINK = "https://whatsapp.com/channel/0029VbB4RqI3mFY5nkzbCs0p";
 
   const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState({ hours: 7, minutes: 0, seconds: 0 });
+  const [clickedActive, setClickedActive] = useState(false);
+  const [celebratingOffer, setCelebratingOffer] = useState(false);
 
   // Countdown timer effect
   useEffect(() => {
@@ -34,10 +39,26 @@ export const OfferCard: React.FC<OfferCardProps> = ({
     return () => clearInterval(timer);
   }, []);
 
-  const handleCopy = (text: string) => {
+  const handleCopy = (text: string, e?: React.MouseEvent) => {
     navigator.clipboard.writeText(text);
     setCopiedNumber(text);
-    setTimeout(() => setCopiedNumber(null), 2000);
+    triggerSuccessFeedback({ x: 0.5, y: 0.65 });
+    setTimeout(() => setCopiedNumber(null), 2500);
+  };
+
+  const handleTelegramClick = (e: React.MouseEvent) => {
+    setClickedActive(true);
+    triggerSuccessFeedback({ x: 0.5, y: 0.5 });
+    setTimeout(() => setClickedActive(false), 2000);
+  };
+
+  const handlePriceClick = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (rect.left + rect.width / 2) / window.innerWidth;
+    const y = (rect.top + rect.height / 2) / window.innerHeight;
+    triggerBigOfferCelebration({ x, y });
+    setCelebratingOffer(true);
+    setTimeout(() => setCelebratingOffer(false), 3000);
   };
 
   const coursesList = [
@@ -46,217 +67,315 @@ export const OfferCard: React.FC<OfferCardProps> = ({
     { name: '📄 টাইপিং জব', id: 'typing-job' },
     { name: '🛍️ প্রোডাক্ট সেলিং', id: 'product-selling' },
     { name: '📧 ইমেইল মার্কেটিং', id: 'email-marketing' },
-    { name: '📱 ডিজিটাল মার্কেটিং', id: 'digital-marketing' },
     { name: '🖼️ ফটো এডিটিং', id: 'photo-editing' },
+    { name: '📶 সিম অফার সেলিং', id: 'sim-offer-selling' },
+    { name: '📈 ডিজিটাল মার্কেটিং', id: 'digital-marketing' },
+    { name: '🎨 গ্রাফিক ডিজাইন', id: 'graphic-design' },
     { name: '🎬 ভিডিও এডিটিং', id: 'video-editing' },
-    { name: '📶 সিম অফার সেলিং', id: 'sim-offer-selling' }
+    { name: '✍️ কন্টেন্ট রাইটিং', id: 'content-writing' },
+    { name: '📱 সোশ্যাল মিডিয়া ম্যানেজমেন্ট', id: 'social-media-management' }
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center py-6 px-3 min-h-[calc(100vh-60px)]">
-      {/* Compact Card Container */}
-      <div className="w-full max-w-[420px] bg-[#0c0a18] rounded-3xl border border-white/5 shadow-2xl overflow-hidden p-6 sm:p-8 transition-all relative">
+    <div className="flex flex-col items-center justify-center py-6 sm:py-10 px-4 font-['Hind_Siliguri']">
+      
+      {/* Neumorphic Hero / Offer Container */}
+      <div className="w-full max-w-[460px] neu-flat rounded-3xl sm:rounded-[32px] p-6 sm:p-8 border border-slate-300/70 relative transition-all duration-300">
 
         {/* Top Offer Badge & Countdown */}
-        <div className="flex items-center justify-between gap-2 mb-3.5 relative">
-          <div className="flex items-center gap-1.5 text-[11px] font-normal text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full">
-            <Clock className="w-3 h-3 text-amber-400 animate-spin" style={{ animationDuration: '8s' }} />
-            <span>অফার শেষ হতে: {String(timeLeft.hours).padStart(2, '0')}:{String(timeLeft.minutes).padStart(2, '0')}:{String(timeLeft.seconds).padStart(2, '0')}</span>
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-rose-700 bg-rose-50/90 px-3 py-1 rounded-full border border-rose-200 shadow-2xs">
+            <Clock className="w-3.5 h-3.5 text-rose-600 shrink-0 animate-pulse" />
+            <span>অফার শেষ হতে: <strong className="font-mono text-rose-800">{String(timeLeft.hours).padStart(2, '0')}:{String(timeLeft.minutes).padStart(2, '0')}:{String(timeLeft.seconds).padStart(2, '0')}</strong></span>
           </div>
 
-          <span className="bg-amber-400 text-black font-bold text-[11px] px-2.5 py-1 rounded-xl shadow-sm shrink-0">
-            স্পেশাল অফার • ৫৫% ছাড়
-          </span>
-        </div>
-
-        {/* Brand Header */}
-        <div className="mb-4 relative">
-          <div className="text-2xl font-black text-white flex items-center gap-1.5 tracking-tight">
-            <span>✨</span> Unity <span className="text-indigo-400">Earning</span>
-          </div>
-          <p className="text-xs text-gray-300 mt-1 leading-relaxed">
-            E-learning Platform - আইটি স্কিল শিখুন, ভবিষ্যৎ গড়ুন।
-          </p>
-        </div>
-
-        {/* Premium Pricing Tier Box */}
-        <div className="my-6 relative rounded-2xl p-[1px] bg-gradient-to-b from-amber-400/50 to-white/5 shadow-2xl shadow-amber-500/10">
-          <div className="bg-[#0a0812] rounded-2xl p-6 relative overflow-hidden">
-            {/* Background Glows */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 blur-[50px] rounded-full pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-indigo-500/10 blur-[40px] rounded-full pointer-events-none" />
-
-            <div className="flex flex-col items-center text-center relative z-10">
-              <div className="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-400 text-[11px] font-bold px-3 py-1 rounded-full border border-amber-500/20 mb-3 uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5" />
-                স্পেশাল লিমিটেড অফার
-              </div>
-
-              <div className="text-gray-400 text-sm font-medium mb-1 flex items-center justify-center gap-1.5">
-                রেগুলার প্রাইস: <span className="text-red-400 line-through decoration-red-500 decoration-2 font-bold ml-1">১১০০ ৳</span>
-              </div>
-
-              <div className="flex items-center justify-center gap-1.5 mb-3">
-                <span className="text-[64px] leading-none font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-300 tracking-tighter">{currentPrice}</span>
-                <span className="text-4xl font-bold text-amber-400">৳</span>
-              </div>
-
-              <div className="text-xs text-gray-300 font-bold mb-5 px-3 py-1.5 bg-white/5 rounded-md border border-white/10 uppercase tracking-widest">
-                লাইফ টাইম এক্সেস
-              </div>
-
-              <div className="w-full h-px bg-gradient-to-r from-transparent via-white/15 to-transparent mb-5" />
-
-              <div className="w-full bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 flex items-center justify-center gap-2">
-                <div className="bg-emerald-500/20 p-1 rounded-md shrink-0">
-                  <Check className="w-4 h-4 text-emerald-400" />
-                </div>
-                <span className="text-emerald-300 text-sm font-bold">৩০০ ৳ ইনস্ট্যান্ট ক্যাশব্যাক নিশ্চিত!</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* WhatsApp Direct Action Button */}
-        <a
-          href={WHATSAPP_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5"
-        >
-          <MessageCircle className="w-5 h-5 fill-white group-hover:scale-110 transition-transform" />
-          <span>আইডি এক্টিভ করুন →</span>
-        </a>
-
-        {/* Modal activation alternative */}
-        <div className="flex items-center justify-between gap-2 mt-2.5 mb-2 text-[11px] text-gray-400">
-          <span>একউন্ট এক্টিভ করতে হোয়াটসঅ্যাপে মেসেজ দিন</span>
           <button
-            onClick={onOpenActivation}
-            className="text-indigo-400 hover:text-indigo-300 underline font-semibold flex items-center gap-0.5 cursor-pointer"
+            onClick={handlePriceClick}
+            className="bg-emerald-100/90 hover:bg-emerald-200 text-emerald-800 font-extrabold text-[11px] px-3 py-1 rounded-full flex items-center gap-1 border border-emerald-300/80 shadow-2xs cursor-pointer active:scale-95 transition-all"
+            title="ক্লিক করে বাজি ও পার্টি ইফেক্ট দেখুন!"
           >
-            <ShieldCheck className="w-3 h-3" />
-            <span>আইডি ভেরিফাই</span>
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> ৫৫% ছাড়
           </button>
         </div>
 
-        {/* Quick Payment Number Copy Box */}
-        <div className="bg-[#1a1533] p-2.5 rounded-lg border border-white/5 flex flex-col gap-2 mb-4">
-          <div className="flex items-center justify-between">
-            <div className="text-[11px]">
-              <span className="text-gray-400">বিকাশ পার্সোনাল: </span>
-              <strong className="text-amber-300 font-mono text-xs">01723046648</strong>
-            </div>
-            <button
-              onClick={() => handleCopy('01723046648')}
-              className="bg-white/10 hover:bg-white/20 text-white text-[10px] px-2 py-1 rounded font-medium flex items-center gap-1 transition-colors"
-            >
-              <Copy className="w-3 h-3 text-indigo-300" />
-              <span>{copiedNumber === '01723046648' ? 'কপি হয়েছে!' : 'কপি করুন'}</span>
-            </button>
+        {/* Brand Header */}
+        <div className="mb-5 text-center">
+          <div className="inline-block mb-1">
+            <h1 className="text-2xl sm:text-3xl font-black font-['Outfit'] tracking-tight text-slate-900 uppercase">
+              UNITY <span className="text-indigo-600 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">EARNING</span>
+            </h1>
           </div>
-          <div className="flex items-center justify-between">
-            <div className="text-[11px]">
-              <span className="text-gray-400">নগদ/উপায় পার্সোনাল: </span>
-              <strong className="text-amber-300 font-mono text-xs">01339786909</strong>
+          <div className="text-xs sm:text-sm font-bold uppercase tracking-widest text-indigo-700 font-['Outfit'] mb-1">
+            E-Learning Platform
+          </div>
+          <p className="text-xs text-slate-600 leading-relaxed font-semibold">
+            আইটি স্কিল শিখুন, প্রফেশনাল ক্যারিয়ার গড়ুন ও ঘরে বসে ইনকাম করুন
+          </p>
+        </div>
+
+        {/* Interactive Pricing Tier Box */}
+        <div 
+          onClick={handlePriceClick}
+          className={`my-5 rounded-3xl bg-gradient-to-b from-white/95 via-[#EEF4FB]/90 to-white/95 p-5 sm:p-6 relative overflow-hidden border transition-all duration-300 cursor-pointer select-none group shadow-sm ${
+            celebratingOffer 
+              ? 'border-indigo-400 ring-4 ring-indigo-200/60 shadow-lg scale-[1.01]' 
+              : 'border-indigo-100/90 hover:border-indigo-300 hover:shadow-md'
+          }`}
+          title="ক্লিক করুন এবং বিগ অফার বাজি সেলিব্রেশন উপভোগ করুন!"
+        >
+          {/* Subtle Celebration Badge */}
+          {celebratingOffer && (
+            <div className="absolute top-2 right-3 z-20 animate-bounce bg-gradient-to-r from-amber-500 to-pink-500 text-white font-black text-[10px] px-2.5 py-0.5 rounded-full shadow-xs flex items-center gap-1">
+              <PartyPopper className="w-3 h-3" />
+              <span>ধামাকা বিগ অফার! 🎉</span>
             </div>
-            <button
-              onClick={() => handleCopy('01339786909')}
-              className="bg-white/10 hover:bg-white/20 text-white text-[10px] px-2 py-1 rounded font-medium flex items-center gap-1 transition-colors"
-            >
-              <Copy className="w-3 h-3 text-indigo-300" />
-              <span>{copiedNumber === '01339786909' ? 'কপি হয়েছে!' : 'কপি করুন'}</span>
-            </button>
+          )}
+
+          <div className="flex flex-col items-center text-center relative z-10">
+            
+            {/* Big Offer / Warranty Tag */}
+            <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-indigo-50 via-blue-50 to-indigo-50 text-indigo-900 text-[11px] font-extrabold px-3.5 py-1 rounded-full mb-2.5 border border-indigo-200/90 shadow-2xs group-hover:scale-105 transition-transform">
+              <Flame className="w-3.5 h-3.5 text-orange-500 fill-orange-500 animate-pulse" />
+              <span>🔥 বিগ ধামাকা অফার (ক্লিক করুন 🎉)</span>
+            </div>
+
+            {/* Original Strikethrough Regular Price: 1100 TK */}
+            <div className="text-slate-500 text-xs font-semibold mb-1 flex items-center justify-center gap-2">
+              <span>রেগুলার ফি:</span>
+              <span className="text-rose-600 line-through decoration-rose-600 decoration-[2.5px] font-bold text-sm bg-rose-50/90 px-3 py-0.5 rounded-lg border border-rose-200/80 shadow-2xs">
+                ৳ ১,১০০
+              </span>
+            </div>
+
+            {/* Large Sale Price - Solid, Stable, Poetic & Refined Color */}
+            <div className="min-h-[58px] flex items-baseline justify-center gap-1 my-1 select-none">
+              <span className="text-5xl sm:text-6xl leading-none font-black text-slate-900 tracking-tight">
+                {currentPrice}
+              </span>
+              <span className="text-3xl font-black text-indigo-600 font-sans">৳</span>
+            </div>
+
+            {/* Lifetime Access Pill */}
+            <div className="text-[11px] text-slate-700 font-bold my-1.5 px-3.5 py-1 bg-white/95 rounded-full border border-slate-200 shadow-2xs">
+              লাইফটাইম এক্সেস ও মেম্বারশিপ
+            </div>
+
+            <div className="w-full h-px bg-slate-200/90 my-2.5" />
+
+            {/* Trust Badges: Instant Cashback Verified */}
+            <div className="w-full flex flex-col gap-2">
+              <div className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 text-emerald-900 rounded-2xl p-2.5 flex items-center justify-center gap-2 border border-emerald-200 shadow-2xs">
+                <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                </div>
+                <span className="text-xs sm:text-sm font-black text-emerald-800 tracking-wide">
+                  ৩০০ ৳ ইনস্ট্যান্ট ক্যাশব্যাক নিশ্চিত!
+                </span>
+              </div>
+
+              <div className="text-[11px] text-slate-600 font-bold flex items-center justify-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+                <span>৳100+ Instant Cashback Verified!</span>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <div className="h-px bg-white/10 my-4" />
-
-        {/* Features List Section */}
-        <div className="mb-4">
-          <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2.5">
-            বিশেষ সুবিধাসমূহ:
-          </div>
-          <ul className="space-y-2 text-xs">
-            <li className="flex items-center gap-2 text-gray-200">
-              <span className="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0">✓</span>
-              <span>১টি এক্টিভ একাউন্ট আইডি</span>
-            </li>
-            <li className="flex items-center gap-2 text-gray-200">
-              <span className="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0">✓</span>
-              <span>প্রতিদিনের পেমেন্ট প্রতিদিন পাওয়ার সুযোগ (বিকাশ/নগদ)</span>
-            </li>
-            <li className="flex items-center gap-2 text-gray-200">
-              <span className="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0">✓</span>
-              <span>টিম লিডার, ট্রেইনার ও কাউন্সিলর গাইডলাইন</span>
-            </li>
-            <li className="flex items-center gap-2 text-gray-200">
-              <span className="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0">✓</span>
-              <span>২৪/৭ লাইভ কাস্টমার ও মেন্টর সাপোর্ট</span>
-            </li>
-          </ul>
-        </div>
-
-        <div className="h-px bg-white/10 my-4" />
-
-        {/* Available Courses & Work Tag Pills */}
-        <div className="mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-              উপলব্ধ কোর্স ও কাজসমূহ:
-            </div>
-            {onOpenCalculator && (
-              <button
-                onClick={onOpenCalculator}
-                className="text-[11px] text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-1"
-              >
-                <Calculator className="w-3 h-3" />
-                <span>আয় হিসাব</span>
-              </button>
+        {/* Primary CTA: "আইডি এক্টিভ করুন" - Enhanced Vibrant Soft UI */}
+        <div className="space-y-2.5 mb-4">
+          <a
+            href={TELEGRAM_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleTelegramClick}
+            className={`w-full py-3.5 px-4 rounded-2xl font-black text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 shadow-md ${
+              clickedActive
+                ? 'neu-btn-emerald'
+                : 'neu-btn-primary'
+            }`}
+          >
+            {clickedActive ? (
+              <>
+                <CheckCircle2 className="w-5 h-5 text-white animate-bounce shrink-0" />
+                <span>টেলিগ্রামে নিয়ে যাওয়া হচ্ছে...</span>
+              </>
+            ) : (
+              <>
+                <Send className="w-5 h-5 fill-white shrink-0" />
+                <span>আইডি এক্টিভ করুন (টেলিগ্রাম) →</span>
+              </>
             )}
+          </a>
+
+          {/* Alternative Quick Action Buttons: WhatsApp & Payment Form */}
+          <div className="grid grid-cols-2 gap-2">
+            <a
+              href={WHATSAPP_CHANNEL_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="neu-btn-emerald py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer text-center text-white"
+            >
+              <WhatsAppIcon size={16} className="w-4 h-4 text-white shrink-0" />
+              <span>হোয়াটসঅ্যাপ চ্যানেল</span>
+            </a>
+
+            <button
+              type="button"
+              onClick={() => {
+                triggerSuccessFeedback({ x: 0.5, y: 0.5 });
+                onOpenActivation();
+              }}
+              className="neu-btn py-2.5 px-3 rounded-xl text-xs font-bold text-indigo-700 hover:text-indigo-900 flex items-center justify-center gap-1.5 border border-white/80 cursor-pointer text-center bg-white/70"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>পেমেন্ট ফর্ম</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Telegram Direct Handle */}
+        <div className="text-center text-xs text-slate-600 mb-4 flex items-center justify-center gap-1.5">
+          <span>সরাসরি মেসেজ দিন:</span>
+          <a 
+            href={TELEGRAM_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-700 font-bold neu-flat-xs px-2.5 py-0.5 rounded-lg border border-white hover:text-blue-900 transition-colors flex items-center gap-1 cursor-pointer"
+          >
+            <Send className="w-3 h-3 text-blue-600" />
+            <span>@unityearning12</span>
+          </a>
+        </div>
+
+        {/* Quick Payment Number Copy Boxes - Fixed Layout & Brand Accents */}
+        <div className="neu-inset p-3 rounded-2xl border border-white/80 flex flex-col gap-2 mb-5">
+          
+          {/* bKash Payment Row */}
+          <div className="bg-white/80 rounded-xl p-2 sm:p-2.5 flex items-center justify-between gap-2 shadow-xs border border-pink-100">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="bg-pink-600 text-white font-bold text-[10px] sm:text-[11px] px-2 py-0.5 rounded-md shrink-0">
+                বিকাশ
+              </span>
+              <div className="flex flex-col min-w-0">
+                <span className="text-[10px] text-slate-500 font-medium leading-none mb-0.5">পার্সোনাল নম্বর</span>
+                <span className="text-slate-900 font-mono font-bold text-xs sm:text-[13px] tracking-wide truncate">
+                  01723046648
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={(e) => handleCopy('01723046648', e)}
+              className={`text-[11px] px-3 py-1.5 rounded-lg font-bold flex items-center gap-1 shrink-0 transition-all cursor-pointer ${
+                copiedNumber === '01723046648'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200/80 active:scale-95'
+              }`}
+            >
+              {copiedNumber === '01723046648' ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
+                  <span>কপি হয়েছে!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5 text-pink-600" />
+                  <span>কপি</span>
+                </>
+              )}
+            </button>
           </div>
 
-          <div className="flex flex-wrap gap-1.5">
-            {coursesList.map((c) => (
+          {/* Nagad & Upay Payment Row */}
+          <div className="bg-white/80 rounded-xl p-2 sm:p-2.5 flex items-center justify-between gap-2 shadow-xs border border-orange-100">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold text-[10px] sm:text-[11px] px-2 py-0.5 rounded-md shrink-0">
+                নগদ / উপায়
+              </span>
+              <div className="flex flex-col min-w-0">
+                <span className="text-[10px] text-slate-500 font-medium leading-none mb-0.5">পার্সোনাল নম্বর</span>
+                <span className="text-slate-900 font-mono font-bold text-xs sm:text-[13px] tracking-wide truncate">
+                  01339786909
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={(e) => handleCopy('01339786909', e)}
+              className={`text-[11px] px-3 py-1.5 rounded-lg font-bold flex items-center gap-1 shrink-0 transition-all cursor-pointer ${
+                copiedNumber === '01339786909'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200/80 active:scale-95'
+              }`}
+            >
+              {copiedNumber === '01339786909' ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
+                  <span>কপি হয়েছে!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5 text-orange-600" />
+                  <span>কপি</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          <p className="text-[10px] text-slate-500 text-center font-medium pt-0.5">
+            💡 "Send Money" করে ট্রানজেকশন আইডি সাথে রাখুন
+          </p>
+        </div>
+
+        {/* 12 Courses Grid Section */}
+        <div className="pt-3 border-t border-slate-300/60">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <Zap className="w-4 h-4 text-amber-500 fill-amber-500" />
+              <span>মেম্বারশিপে অন্তর্ভুক্ত ১২+ কোর্স:</span>
+            </span>
+            <span className="text-[10px] text-indigo-700 bg-indigo-50 font-bold px-2.5 py-0.5 rounded-full border border-indigo-200">
+              সকল কোর্স অন্তর্ভুক্ত
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            {coursesList.map((course) => (
               <button
-                key={c.id}
-                onClick={() => onSelectCourse && onSelectCourse(c.id)}
-                className="bg-white/5 hover:bg-indigo-600/20 text-gray-300 hover:text-indigo-200 border border-white/5 hover:border-indigo-500/40 px-2.5 py-1 rounded-md text-[11px] transition-all cursor-pointer"
+                key={course.id}
+                onClick={() => onSelectCourse && onSelectCourse(course.id)}
+                className="bg-white/70 hover:bg-white text-left p-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:text-indigo-700 transition-all flex items-center justify-between border border-slate-200/70 hover:border-indigo-300 hover:shadow-xs group cursor-pointer"
               >
-                {c.name}
+                <span className="truncate">{course.name}</span>
+                <ArrowRight className="w-3 h-3 text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all shrink-0" />
               </button>
             ))}
           </div>
         </div>
 
-        {/* Why Choose Section Box */}
-        <div className="bg-[#1a1533] p-3.5 rounded-xl border border-white/10 mt-4">
-          <div className="text-xs font-bold text-indigo-400 mb-1 flex items-center gap-1">
-            <Zap className="w-3.5 h-3.5" />
-            <span>কেন এই মেম্বারশিপ?</span>
-          </div>
-          <p className="text-[11.5px] text-gray-300 leading-relaxed">
-            আমাদের প্ল্যাটফর্মে আপনি আইটি স্কিল শিখবেন এবং সাথে সাথে কাজ করে দৈনিক আয় করার সুযোগ পাবেন। বিস্তারিত জানতে সরাসরি{' '}
-            <a
-              href="https://wa.me/8801600602084"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-emerald-400 hover:underline font-semibold"
+        {/* Income Calculator Quick Launch */}
+        {onOpenCalculator && (
+          <div className="mt-4 pt-3 border-t border-slate-200/80 text-center">
+            <button
+              onClick={onOpenCalculator}
+              className="w-full neu-btn py-2 px-3 rounded-xl text-xs font-bold text-slate-700 hover:text-blue-600 flex items-center justify-center gap-1.5 transition-all border border-white cursor-pointer"
             >
-              WhatsApp এ যোগাযোগ করুন
-            </a>।
-          </p>
-        </div>
+              <Calculator className="w-3.5 h-3.5 text-blue-600" />
+              <span>দৈনিক সম্ভাব্য আয় ক্যালকুলেট করুন</span>
+            </button>
+          </div>
+        )}
 
-        {/* Bottom Quick Action Bar */}
-        <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px]">
-          <span className="text-gray-400">সহজ এক্টিভেশন প্রক্রিয়া</span>
+        {/* Hidden Admin Entry Icon */}
+        <div className="mt-3 flex justify-end">
           <button
-            onClick={onOpenActivation}
-            className="text-amber-300 hover:text-amber-200 font-bold flex items-center gap-1 group"
+            type="button"
+            onClick={onOpenAdmin}
+            className="text-[10px] text-slate-400 hover:text-slate-600 transition-colors p-1"
+            title="অ্যাডমিন প্যানেল"
           >
-            <span>পেমেন্ট সাবমিট করুন</span>
-            <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+            ⚙️
           </button>
         </div>
 
