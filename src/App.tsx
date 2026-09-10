@@ -12,7 +12,8 @@ import { AdminModal } from './components/AdminModal';
 import { UnityAIChatbot } from './components/UnityAIChatbot';
 import { Lock, Send, ShieldCheck, CheckCircle2, Sparkles } from 'lucide-react';
 import { WhatsAppIcon } from './components/WhatsAppIcon';
-import { loadPricingSettings, calculateEffectivePrice, PricingSettings } from './utils/pricing';
+import { loadPricingSettings, savePricingSettings, calculateEffectivePrice, PricingSettings } from './utils/pricing';
+import { subscribeToPricingSettings } from './lib/firebase';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<string>('card');
@@ -34,10 +35,19 @@ export default function App() {
 
   useEffect(() => {
     syncPrice();
+    
+    // Subscribe to Firebase Firestore real-time pricing changes
+    const unsubscribeFirebase = subscribeToPricingSettings((newSettings) => {
+      savePricingSettings(newSettings);
+      const effective = calculateEffectivePrice(newSettings);
+      setCurrentPrice(effective);
+    });
+
     // Re-check periodically in case midnight crossed
     const timer = setInterval(syncPrice, 60000);
     window.addEventListener('focus', syncPrice);
     return () => {
+      unsubscribeFirebase();
       clearInterval(timer);
       window.removeEventListener('focus', syncPrice);
     };

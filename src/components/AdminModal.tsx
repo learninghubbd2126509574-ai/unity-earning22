@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Lock, CheckCircle2, Save, ShieldAlert, Sliders, Calendar, Zap, Check } from 'lucide-react';
+import { X, Lock, CheckCircle2, Save, ShieldAlert, Sliders, Calendar, Zap, Check, Radio } from 'lucide-react';
 import {
   PricingSettings,
   loadPricingSettings,
@@ -8,6 +8,7 @@ import {
   getBengaliDayName,
   isSpecialWeekend
 } from '../utils/pricing';
+import { savePricingSettingsToFirestore } from '../lib/firebase';
 
 interface AdminModalProps {
   isOpen: boolean;
@@ -55,13 +56,19 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, current
     }
   };
 
-  const handleSaveSettings = (e: React.FormEvent) => {
+  const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     const newSettings: PricingSettings = {
       isAutoPricing,
       manualPrice
     };
     savePricingSettings(newSettings);
+
+    try {
+      await savePricingSettingsToFirestore(newSettings);
+    } catch (err) {
+      console.warn('Firestore sync warning:', err);
+    }
 
     const effectivePrice = isAutoPricing ? autoCalculatedTodayPrice : manualPrice;
     onUpdatePrice(effectivePrice, newSettings);
