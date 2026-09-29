@@ -36,45 +36,45 @@ export const IncomeCalculator: React.FC<IncomeCalculatorProps> = ({
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12 font-['Hind_Siliguri']">
-      <div className="neu-flat rounded-3xl sm:rounded-[32px] p-6 sm:p-8 border border-white/80 relative">
+      <div className="bg-white rounded-3xl p-5 sm:p-8 border border-slate-200 shadow-sm relative">
         
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-12 rounded-2xl neu-inset flex items-center justify-center text-blue-600 border border-white/80">
-            <Calculator className="w-6 h-6" />
+          <div className="w-11 h-11 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
+            <Calculator className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-black text-[#2C3E50] tracking-tight">ইনকাম ক্যালকুলেটর</h2>
-            <p className="text-xs sm:text-sm text-slate-500 font-medium">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">ইনকাম ক্যালকুলেটর</h2>
+            <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
               দৈনিক কাজের সময় নির্ধারণ করে আনুমানিক মাসিক উপার্জন হিসাব করুন
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6">
           
           {/* Controls Column */}
-          <div className="md:col-span-7 space-y-5">
+          <div className="md:col-span-7 space-y-4">
             
             {/* Skill Selector */}
             <div>
-              <label className="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-slate-600 mb-2 uppercase tracking-wider">
                 ১. কাজ / স্কিল নির্বাচন করুন:
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {(Object.keys(rates) as Array<keyof typeof rates>).map((key) => (
                   <button
                     key={key}
                     type="button"
                     onClick={() => setSelectedSkill(key)}
-                    className={`p-2.5 rounded-xl text-xs font-bold text-left transition-all cursor-pointer border border-white/70 ${
+                    className={`p-2.5 rounded-xl text-xs font-semibold text-left transition-all cursor-pointer border ${
                       selectedSkill === key
-                        ? 'neu-btn-primary shadow-md'
-                        : 'neu-btn text-slate-700'
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                        : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200/80'
                     }`}
                   >
                     <div>{rates[key].name}</div>
-                    <div className={`text-[10px] font-medium mt-0.5 ${
-                      selectedSkill === key ? 'text-blue-100' : 'text-slate-500'
+                    <div className={`text-[10px] font-normal mt-0.5 ${
+                      selectedSkill === key ? 'text-indigo-100' : 'text-slate-500'
                     }`}>
                       {rates[key].complexity}
                     </div>
@@ -84,13 +84,13 @@ export const IncomeCalculator: React.FC<IncomeCalculatorProps> = ({
             </div>
 
             {/* Daily Hours Slider */}
-            <div className="neu-inset p-4 rounded-2xl border border-white/60">
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/80">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-blue-600" />
+                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <Clock className="w-4 h-4 text-indigo-600" />
                   <span>২. দৈনিক কাজের সময়:</span>
                 </label>
-                <span className="text-xs font-bold text-blue-700 neu-flat-xs px-2.5 py-1 rounded-lg border border-white">
+                <span className="text-xs font-bold text-indigo-700 bg-white px-2.5 py-0.5 rounded-lg border border-slate-200 shadow-2xs">
                   {dailyHours} ঘণ্টা / দিন
                 </span>
               </div>
@@ -102,7 +102,7 @@ export const IncomeCalculator: React.FC<IncomeCalculatorProps> = ({
                 step="1"
                 value={dailyHours}
                 onChange={(e) => setDailyHours(Number(e.target.value))}
-                className="w-full accent-blue-600 cursor-pointer h-2 bg-slate-300 rounded-lg my-2"
+                className="w-full accent-indigo-600 cursor-pointer h-2 bg-slate-200 rounded-lg my-2"
               />
               <div className="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
                 <span>১ ঘণ্টা</span>
@@ -116,30 +116,30 @@ export const IncomeCalculator: React.FC<IncomeCalculatorProps> = ({
           </div>
 
           {/* Results Display Column */}
-          <div className="md:col-span-5 neu-inset p-5 rounded-2xl border border-white/60 flex flex-col justify-between">
+          <div className="md:col-span-5 bg-slate-50 p-5 rounded-2xl border border-slate-200/80 flex flex-col justify-between">
             <div>
-              <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
+              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
                 আনুমানিক আয় হিসাব:
               </div>
 
-              <div className="space-y-3">
-                <div className="neu-flat-sm p-3.5 rounded-xl border border-white/80">
-                  <span className="text-[11px] text-slate-500 font-medium block">দৈনিক সম্ভাব্য আয়:</span>
-                  <div className="text-xl font-extrabold text-[#2C3E50] mt-0.5">
-                    ৳ {dailyIncome.toLocaleString('bn-BD')} <span className="text-xs font-medium text-slate-500">টাকা</span>
+              <div className="space-y-2.5">
+                <div className="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-2xs">
+                  <span className="text-[11px] text-slate-500 font-normal block">দৈনিক সম্ভাব্য আয়:</span>
+                  <div className="text-xl font-bold text-slate-900 mt-0.5">
+                    ৳ {dailyIncome.toLocaleString('bn-BD')} <span className="text-xs font-normal text-slate-500">টাকা</span>
                   </div>
                 </div>
 
-                <div className="neu-flat-sm p-3.5 rounded-xl border border-emerald-200/60">
-                  <span className="text-[11px] text-emerald-700 font-bold block">মাসিক আনুমানিক উপার্জন:</span>
-                  <div className="text-2xl font-black text-emerald-600 mt-0.5">
-                    ৳ {monthlyIncome.toLocaleString('bn-BD')} <span className="text-xs font-medium text-emerald-700">টাকা / মাস</span>
+                <div className="bg-white p-3.5 rounded-xl border border-emerald-200 shadow-2xs">
+                  <span className="text-[11px] text-emerald-700 font-semibold block">মাসিক আনুমানিক উপার্জন:</span>
+                  <div className="text-2xl font-extrabold text-emerald-600 mt-0.5">
+                    ৳ {monthlyIncome.toLocaleString('bn-BD')} <span className="text-xs font-normal text-emerald-700">টাকা / মাস</span>
                   </div>
                 </div>
 
-                <div className="neu-flat-xs p-2.5 rounded-xl border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
+                <div className="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200/80 text-emerald-800 text-xs flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <div className="font-medium">
+                  <div className="font-normal">
                     <span>আইডি এক্টিভ করলেই নিশ্চিত <strong>৳ ৩০০ ক্যাশব্যাক</strong> পাবেন!</span>
                   </div>
                 </div>
@@ -148,7 +148,7 @@ export const IncomeCalculator: React.FC<IncomeCalculatorProps> = ({
 
             <button
               onClick={onOpenActivation}
-              className="w-full mt-5 neu-btn-primary py-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-md"
+              className="w-full mt-4 neu-btn-primary py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs"
             >
               <span>{currentPrice} টাকায় মেম্বারশিপ নিন</span>
               <ArrowRight className="w-4 h-4" />

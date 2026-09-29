@@ -50,55 +50,55 @@ export function KeyFeaturesSection({ onOpenActivation }: KeyFeaturesSectionProps
   ];
 
   return (
-    <section className="py-10 sm:py-14 font-['Hind_Siliguri']">
+    <section className="py-8 sm:py-12 font-['Hind_Siliguri']">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         
         {/* Section Title */}
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 text-xs font-bold text-emerald-800 mb-3 border border-emerald-200 shadow-2xs">
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-xs font-semibold text-emerald-800 mb-2.5 border border-emerald-200/80 shadow-2xs">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
             <span>কেন ইউনিটি আর্নিং প্ল্যাটফর্ম বেছে নেবেন?</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             প্রফেশনাল সুবিধা ও ফিচারসমূহ
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 mt-2 font-medium">
+          <p className="text-xs sm:text-sm text-slate-600 mt-1.5 font-normal leading-relaxed">
             আধুনিক সফট ইউআই ও নির্ভরযোগ্য আইটি স্কিল হাব - আপনার ক্যারিয়ার ও আয়ের পথকে করবে মসৃণ
           </p>
         </div>
 
         {/* 4-Card Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {features.map((feat, idx) => {
             const Icon = feat.icon;
             return (
               <div
                 key={idx}
-                className="bg-white/80 rounded-3xl p-6 flex flex-col justify-between border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1.5"
+                className="bg-white rounded-2xl p-5 flex flex-col justify-between border border-slate-200 shadow-2xs hover:shadow-xs hover:border-slate-300 transition-all duration-200"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center font-bold text-indigo-600 shadow-2xs">
-                      <Icon className="w-6 h-6" />
+                  <div className="flex items-center justify-between mb-3.5">
+                    <div className="w-11 h-11 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center font-bold text-indigo-600">
+                      <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200/70">
                       {feat.badge}
                     </span>
                   </div>
 
-                  <h3 className="text-base font-black text-slate-900 mb-0.5">
+                  <h3 className="text-base font-bold text-slate-900 mb-0.5">
                     {feat.title}
                   </h3>
-                  <p className="text-[11px] font-bold text-indigo-600 mb-2.5">
+                  <p className="text-[11px] font-semibold text-indigo-600 mb-2">
                     {feat.subtitle}
                   </p>
-                  <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                  <p className="text-xs text-slate-600 leading-relaxed font-normal">
                     {feat.desc}
                   </p>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-slate-200/80 flex items-center justify-between text-xs font-bold text-slate-700">
-                  <span className="flex items-center gap-1 text-[11px] text-emerald-600 font-bold">
+                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700">
+                  <span className="flex items-center gap-1 text-[11px] text-emerald-600 font-semibold">
                     <CheckCircle2 className="w-3.5 h-3.5" /> ১০০% ভেরিফাইড
                   </span>
                   <span className="text-indigo-600">→</span>
@@ -109,21 +109,21 @@ export function KeyFeaturesSection({ onOpenActivation }: KeyFeaturesSectionProps
         </div>
 
         {/* Secondary CTA Bar */}
-        <div className="mt-10 bg-gradient-to-r from-white via-indigo-50/40 to-white rounded-3xl p-6 sm:p-8 border border-indigo-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="mt-8 bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-5">
           <div className="text-center md:text-left">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 mb-1">
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-700 mb-1">
               <Gift className="w-4 h-4 text-pink-500 animate-bounce" />
               <span>লিমিটেড টাইম বিশেষ সুযোগ</span>
             </div>
-            <h3 className="text-lg sm:text-xl font-black text-slate-900">
+            <h3 className="text-lg sm:text-xl font-extrabold text-slate-900">
               আজই শুরু করুন এবং নিশ্চিত ৩০০৳ ক্যাশব্যাক বুঝে নিন!
             </h3>
-            <p className="text-xs text-slate-600 mt-1 max-w-xl font-medium">
+            <p className="text-xs text-slate-600 mt-1 max-w-xl font-normal leading-relaxed">
               বিকাশ বা নগদে সেন্ড মানি করে ট্রানজেকশন আইডি পাঠিয়ে দিলেই ১০ মিনিটের মধ্যে আপনার আইডি একটিভ হবে।
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto shrink-0">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 w-full md:w-auto shrink-0">
             <a
               href={WHATSAPP_CHANNEL_LINK}
               target="_blank"

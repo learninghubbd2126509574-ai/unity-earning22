@@ -4,6 +4,7 @@
       "pricing": {
         "isAutoPricing": "boolean",
         "manualPrice": "number",
+        "availableSeats": "number",
         "updatedAt": "string"
       }
     }

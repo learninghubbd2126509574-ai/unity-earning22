@@ -10,7 +10,7 @@ import { CourseCatalog } from './components/CourseCatalog';
 import { FAQSection } from './components/FAQSection';
 import { AdminModal } from './components/AdminModal';
 import { UnityAIChatbot } from './components/UnityAIChatbot';
-import { Lock, Send, ShieldCheck, CheckCircle2, Sparkles } from 'lucide-react';
+import { Lock, Send, ShieldCheck, CheckCircle2, Sparkles, BookOpen, MessageSquare, Calculator, HelpCircle } from 'lucide-react';
 import { WhatsAppIcon } from './components/WhatsAppIcon';
 import { loadPricingSettings, savePricingSettings, calculateEffectivePrice, PricingSettings } from './utils/pricing';
 import { subscribeToPricingSettings } from './lib/firebase';
@@ -21,26 +21,36 @@ export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
   const [selectedCourseId, setSelectedCourseId] = useState<string | undefined>(undefined);
 
-  // Initialize price from calendar / pricing settings
+  // Initialize price and available seats from settings
   const [currentPrice, setCurrentPrice] = useState<number>(() => {
     const settings = loadPricingSettings();
     return calculateEffectivePrice(settings);
+  });
+  const [availableSeats, setAvailableSeats] = useState<number>(() => {
+    const settings = loadPricingSettings();
+    return settings.availableSeats ?? 41;
   });
 
   const syncPrice = useCallback(() => {
     const settings = loadPricingSettings();
     const effective = calculateEffectivePrice(settings);
     setCurrentPrice(effective);
+    if (typeof settings.availableSeats === 'number') {
+      setAvailableSeats(settings.availableSeats);
+    }
   }, []);
 
   useEffect(() => {
     syncPrice();
     
-    // Subscribe to Firebase Firestore real-time pricing changes
+    // Subscribe to Firebase Firestore real-time pricing and seats changes
     const unsubscribeFirebase = subscribeToPricingSettings((newSettings) => {
       savePricingSettings(newSettings);
       const effective = calculateEffectivePrice(newSettings);
       setCurrentPrice(effective);
+      if (typeof newSettings.availableSeats === 'number') {
+        setAvailableSeats(newSettings.availableSeats);
+      }
     });
 
     // Re-check periodically in case midnight crossed
@@ -53,8 +63,11 @@ export default function App() {
     };
   }, [syncPrice]);
 
-  const handleUpdatePrice = (newPrice: number, _settings?: PricingSettings) => {
+  const handleUpdatePrice = (newPrice: number, settings?: PricingSettings) => {
     setCurrentPrice(newPrice);
+    if (settings && typeof settings.availableSeats === 'number') {
+      setAvailableSeats(settings.availableSeats);
+    }
   };
 
   useEffect(() => {
@@ -128,9 +141,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#EEF2F6] text-[#2C3E50] flex flex-col font-['Hind_Siliguri']">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-['Hind_Siliguri']">
       
-      {/* Top Header Navigation (Neumorphic) */}
+      {/* Top Header Navigation */}
       <Navbar
         onOpenActivation={() => setIsActivationOpen(true)}
         activeSection={activeSection}
@@ -140,69 +153,25 @@ export default function App() {
 
       {/* Main Content Sections */}
       <main className="flex-1">
-        
-        {/* Section Navigation Pills Bar for Mobile (Neumorphic Inset) */}
-        <div className="md:hidden bg-[#EEF2F6]/95 px-3 py-2 border-b border-white/80 flex items-center justify-between overflow-x-auto text-xs font-bold space-x-2 no-scrollbar shadow-xs">
-          <button
-            onClick={() => setActiveSection('card')}
-            className={`px-3.5 py-1.5 rounded-xl shrink-0 whitespace-nowrap transition-all cursor-pointer ${
-              activeSection === 'card' ? 'neu-btn-primary shadow-xs' : 'neu-flat text-slate-700'
-            }`}
-          >
-            অফার ড্যাশবোর্ড
-          </button>
-          <button
-            onClick={() => setActiveSection('reviews')}
-            className={`px-3.5 py-1.5 rounded-xl shrink-0 whitespace-nowrap transition-all cursor-pointer ${
-              activeSection === 'reviews' ? 'neu-btn-primary shadow-xs' : 'neu-flat text-slate-700'
-            }`}
-          >
-            শিক্ষার্থীদের মতামত
-          </button>
-          <button
-            onClick={() => setActiveSection('courses')}
-            className={`px-3.5 py-1.5 rounded-xl shrink-0 whitespace-nowrap transition-all cursor-pointer ${
-              activeSection === 'courses' ? 'neu-btn-primary shadow-xs' : 'neu-flat text-slate-700'
-            }`}
-          >
-            কোর্সসমূহ
-          </button>
-          <button
-            onClick={() => setActiveSection('calculator')}
-            className={`px-3.5 py-1.5 rounded-xl shrink-0 whitespace-nowrap transition-all cursor-pointer ${
-              activeSection === 'calculator' ? 'neu-btn-primary shadow-xs' : 'neu-flat text-slate-700'
-            }`}
-          >
-            আয় ক্যালকুলেটর
-          </button>
-          <button
-            onClick={() => setActiveSection('faq')}
-            className={`px-3.5 py-1.5 rounded-xl shrink-0 whitespace-nowrap transition-all cursor-pointer ${
-              activeSection === 'faq' ? 'neu-btn-primary shadow-xs' : 'neu-flat text-slate-700'
-            }`}
-          >
-            প্রশ্নোত্তর
-          </button>
-        </div>
-
         {/* View Switcher */}
         {activeSection === 'card' && (
           <div className="space-y-6 pb-12">
-            {/* 1. Hero Offer Card (Neumorphic) */}
+            {/* 1. Hero Offer Card */}
             <OfferCard
               onOpenActivation={() => setIsActivationOpen(true)}
               onSelectCourse={handleSelectCourse}
-              onOpenCalculator={() => setActiveSection('calculator')}
+              onOpenCalculator={() => { setActiveSection('calculator'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               currentPrice={currentPrice}
+              availableSeats={availableSeats}
               onOpenAdmin={() => setIsAdminOpen(true)}
             />
 
-            {/* 2. Key Features Section (Neumorphic) */}
+            {/* 2. Key Features Section */}
             <KeyFeaturesSection 
               onOpenActivation={() => setIsActivationOpen(true)}
             />
 
-            {/* 3. Students Reviews & Comments Section (Core Carousel Addition) */}
+            {/* 3. Students Reviews & Comments Section */}
             <StudentReviewsSection />
 
             {/* 4. Courses Catalog */}
@@ -221,13 +190,13 @@ export default function App() {
         )}
 
         {activeSection === 'reviews' && (
-          <div className="py-6">
+          <div className="py-4 sm:py-6">
             <StudentReviewsSection />
           </div>
         )}
 
         {activeSection === 'courses' && (
-          <div className="py-6">
+          <div className="py-4 sm:py-6">
             <CourseCatalog
               onOpenActivation={() => setIsActivationOpen(true)}
               selectedCourseId={selectedCourseId}
@@ -237,7 +206,7 @@ export default function App() {
         )}
 
         {activeSection === 'calculator' && (
-          <div className="py-6">
+          <div className="py-4 sm:py-6">
             <IncomeCalculator 
               onOpenActivation={() => setIsActivationOpen(true)} 
               currentPrice={currentPrice}
@@ -246,7 +215,7 @@ export default function App() {
         )}
 
         {activeSection === 'faq' && (
-          <div className="py-6">
+          <div className="py-4 sm:py-6">
             <FAQSection 
               onOpenActivation={() => setIsActivationOpen(true)} 
               currentPrice={currentPrice}
@@ -256,28 +225,28 @@ export default function App() {
 
       </main>
 
-      {/* Neumorphic Soft UI Footer */}
-      <footer className="bg-[#EEF2F6] border-t border-white/80 text-slate-600 text-xs py-10 px-4 mt-8 mb-16 sm:mb-0 shadow-[0_-4px_16px_rgba(209,217,230,0.4)]">
+      {/* Modern Clean Footer */}
+      <footer className="bg-white border-t border-slate-200 text-slate-600 text-xs py-8 px-4 mt-8 pb-24 sm:pb-8 shadow-xs">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
           
           <div>
-            <div className="text-slate-900 font-['Outfit'] font-black text-lg flex items-center justify-center md:justify-start gap-1.5 uppercase">
+            <div className="text-slate-900 font-['Outfit'] font-extrabold text-lg flex items-center justify-center md:justify-start gap-1.5 uppercase tracking-tight">
               <span>UNITY <span className="text-indigo-600">EARNING</span></span>
             </div>
             <div className="text-[11px] text-indigo-700 font-bold uppercase tracking-wider mt-0.5">
               E-Learning Platform
             </div>
-            <p className="text-xs text-slate-500 mt-1 max-w-sm font-medium">
+            <p className="text-xs text-slate-500 mt-1 max-w-sm font-normal">
               Unity Earning E-Learning Platform - নির্ভরযোগ্য ফ্রিল্যান্সিং স্কিল ও অনলাইন ক্যারিয়ার হাব।
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 text-slate-600 text-xs font-semibold">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 text-slate-600 text-xs font-semibold">
             <a 
               href="https://t.me/unityearning12" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="neu-btn text-blue-700 px-3.5 py-1.5 rounded-xl border border-white flex items-center gap-1.5 font-bold cursor-pointer"
+              className="bg-blue-50 text-blue-700 px-3.5 py-1.5 rounded-xl border border-blue-200 hover:bg-blue-100 flex items-center gap-1.5 font-bold cursor-pointer transition-colors shadow-2xs"
             >
               <Send className="w-3.5 h-3.5" />
               <span>@unityearning12</span>
@@ -287,13 +256,13 @@ export default function App() {
               href="https://whatsapp.com/channel/0029VbB4RqI3mFY5nkzbCs0p" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="neu-btn-emerald text-white px-3.5 py-1.5 rounded-xl border border-emerald-300/40 flex items-center gap-1.5 font-bold cursor-pointer"
+              className="neu-btn-emerald text-white px-3.5 py-1.5 rounded-xl border border-emerald-300/40 flex items-center gap-1.5 font-bold cursor-pointer shadow-2xs"
             >
               <WhatsAppIcon size={14} className="w-3.5 h-3.5 text-white" />
               <span>হোয়াটসঅ্যাপ চ্যানেল</span>
             </a>
 
-            <span className="neu-flat-xs px-2.5 py-1 rounded-lg text-emerald-700 font-bold border border-white">
+            <span className="bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-lg font-bold border border-emerald-200">
               ক্যাশব্যাক: ৩০০৳
             </span>
           </div>
@@ -302,7 +271,7 @@ export default function App() {
             <span>© {new Date().getFullYear()} Unity Earning. All rights reserved.</span>
             <button
               onClick={() => setIsAdminOpen(true)}
-              className="neu-flat-xs px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-1 cursor-pointer border border-white"
+              className="bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1 cursor-pointer border border-slate-200"
               title="Admin Login (212650)"
             >
               <Lock className="w-3 h-3" />
@@ -312,6 +281,59 @@ export default function App() {
 
         </div>
       </footer>
+
+      {/* Mobile Native App Bottom Navigation Dock (Fixed bottom bar) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-2 flex items-center justify-around shadow-[0_-4px_16px_rgba(0,0,0,0.06)] safe-area-bottom">
+        <button
+          onClick={() => { setActiveSection('card'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+            activeSection === 'card' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Sparkles className="w-4 h-4 mb-0.5" />
+          <span className="text-[10px] tracking-tight">অফার</span>
+        </button>
+
+        <button
+          onClick={() => { setActiveSection('courses'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+            activeSection === 'courses' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <BookOpen className="w-4 h-4 mb-0.5" />
+          <span className="text-[10px] tracking-tight">কোর্সসমূহ</span>
+        </button>
+
+        <button
+          onClick={() => { setActiveSection('reviews'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+            activeSection === 'reviews' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <MessageSquare className="w-4 h-4 mb-0.5" />
+          <span className="text-[10px] tracking-tight">রিভিউ</span>
+        </button>
+
+        <button
+          onClick={() => { setActiveSection('calculator'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+            activeSection === 'calculator' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Calculator className="w-4 h-4 mb-0.5" />
+          <span className="text-[10px] tracking-tight">ক্যালকুলেটর</span>
+        </button>
+
+        <button
+          onClick={() => { setActiveSection('faq'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+            activeSection === 'faq' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <HelpCircle className="w-4 h-4 mb-0.5" />
+          <span className="text-[10px] tracking-tight">প্রশ্নোত্তর</span>
+        </button>
+      </nav>
 
       {/* Interactive Account Activation Drawer Modal */}
       <ActivationModal
@@ -325,7 +347,9 @@ export default function App() {
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
         currentPrice={currentPrice}
+        availableSeats={availableSeats}
         onUpdatePrice={handleUpdatePrice}
+        onUpdateSeats={(seats) => setAvailableSeats(seats)}
       />
 
       {/* Floating Unity AI Assistant Chatbot */}

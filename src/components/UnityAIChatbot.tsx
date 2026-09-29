@@ -213,7 +213,7 @@ export const UnityAIChatbot: React.FC<UnityAIChatbotProps> = ({
   return (
     <>
       {/* Floating Action Buttons (Realistic WhatsApp + Unity Chat Bot Launcher) */}
-      <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-3 font-['Hind_Siliguri']">
+      <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end gap-2.5 font-['Hind_Siliguri']">
         
         {/* Floating Realistic WhatsApp Channel & Payment Group Button */}
         <div className="group relative flex items-center">

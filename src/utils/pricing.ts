@@ -1,10 +1,14 @@
 export interface PricingSettings {
   isAutoPricing: boolean;
   manualPrice: number;
+  availableSeats: number;
 }
 
 const STORAGE_KEY_AUTO = 'unity_auto_pricing_enabled';
 const STORAGE_KEY_MANUAL_PRICE = 'unity_manual_price';
+const STORAGE_KEY_AVAILABLE_SEATS = 'unity_available_seats';
+
+export const DEFAULT_AVAILABLE_SEATS = 41;
 
 /**
  * Returns today's automatic price based on the calendar:
@@ -31,18 +35,22 @@ export function loadPricingSettings(): PricingSettings {
   try {
     const autoStored = localStorage.getItem(STORAGE_KEY_AUTO);
     const manualStored = localStorage.getItem(STORAGE_KEY_MANUAL_PRICE);
+    const seatsStored = localStorage.getItem(STORAGE_KEY_AVAILABLE_SEATS);
 
     const isAutoPricing = autoStored === null ? true : autoStored === 'true';
     const manualPrice = manualStored ? parseInt(manualStored, 10) || 499 : 499;
+    const availableSeats = seatsStored ? parseInt(seatsStored, 10) || DEFAULT_AVAILABLE_SEATS : DEFAULT_AVAILABLE_SEATS;
 
     return {
       isAutoPricing,
-      manualPrice: isNaN(manualPrice) ? 499 : manualPrice
+      manualPrice: isNaN(manualPrice) ? 499 : manualPrice,
+      availableSeats: isNaN(availableSeats) ? DEFAULT_AVAILABLE_SEATS : availableSeats
     };
   } catch {
     return {
       isAutoPricing: true,
-      manualPrice: 499
+      manualPrice: 499,
+      availableSeats: DEFAULT_AVAILABLE_SEATS
     };
   }
 }
@@ -51,6 +59,7 @@ export function savePricingSettings(settings: PricingSettings): void {
   try {
     localStorage.setItem(STORAGE_KEY_AUTO, String(settings.isAutoPricing));
     localStorage.setItem(STORAGE_KEY_MANUAL_PRICE, String(settings.manualPrice));
+    localStorage.setItem(STORAGE_KEY_AVAILABLE_SEATS, String(settings.availableSeats ?? DEFAULT_AVAILABLE_SEATS));
   } catch {
     // safely ignore local storage errors in sandboxed iframes
   }
