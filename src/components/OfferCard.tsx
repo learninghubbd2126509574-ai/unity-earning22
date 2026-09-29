@@ -185,27 +185,27 @@ export const OfferCard: React.FC<OfferCardProps> = ({
 
               <div className="flex flex-col items-center text-center relative z-10">
                 
-                {/* Big Offer / Flame Tag */}
-                <div className="inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-900 text-xs font-bold px-3 py-1 rounded-full mb-2.5 border border-indigo-200/80 shadow-2xs group-hover:scale-105 transition-transform">
-                  <Flame className="w-3.5 h-3.5 text-orange-500 fill-orange-500 animate-pulse" />
-                  <span>🔥 বিগ ধামাকা অফার (ক্লিক করে বাজি দেখুন 🎉)</span>
+                {/* Stylish Royal Blue Tag: আজকের জন্য বিগ অফার */}
+                <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 text-white text-xs sm:text-[13px] font-semibold px-3.5 py-1 rounded-full mb-2 shadow-xs border border-blue-400/30 whitespace-nowrap tracking-wide group-hover:scale-105 transition-all">
+                  <Sparkles className="w-3.5 h-3.5 text-blue-200 shrink-0 animate-pulse" />
+                  <span>আজকের জন্য বিগ অফার</span>
                 </div>
 
-                {/* Strikethrough Regular Price */}
-                <div className="text-slate-500 text-xs sm:text-sm font-medium mb-1 flex items-center justify-center gap-2">
-                  <span>রেগুলার ফি:</span>
-                  <span className="text-rose-600 line-through decoration-rose-600 decoration-[2px] font-bold text-sm sm:text-base bg-rose-50 px-2.5 py-0.5 rounded-md border border-rose-200/60">
-                    ৳ ১,১০০
+                {/* Strikethrough Regular Price in Red with English 1,100 */}
+                <div className="text-rose-600 text-xs sm:text-sm font-bold mb-1 flex items-center justify-center gap-2">
+                  <span className="text-rose-600 font-bold">রেগুলার ফি:</span>
+                  <span className="text-rose-600 line-through decoration-rose-600 decoration-[2px] font-extrabold text-sm sm:text-base bg-rose-50 px-2.5 py-0.5 rounded-md border border-rose-200/80">
+                    1,100 ৳
                   </span>
                 </div>
 
-                {/* Eye-Catching Animated Sale Price with vibrant, high-contrast color */}
+                {/* Eye-Catching Animated Sale Price with elegant, premium Royal Indigo-Blue color */}
                 <div className="my-2 select-none flex items-center justify-center">
-                  <div className="animate-price-pulse inline-flex items-baseline justify-center px-5 py-1.5 rounded-2xl bg-gradient-to-r from-amber-50/90 via-rose-50/80 to-amber-50/90 border-2 border-rose-300/80 shadow-xs hover:shadow-sm transition-all">
-                    <span className="text-4xl sm:text-5xl font-extrabold font-['Outfit'] tracking-tight bg-gradient-to-r from-rose-600 via-red-600 to-amber-600 bg-clip-text text-transparent drop-shadow-2xs">
+                  <div className="animate-price-pulse inline-flex items-baseline justify-center px-6 py-2 rounded-2xl bg-gradient-to-r from-blue-50/90 via-indigo-50/80 to-sky-50/90 border-2 border-indigo-300/80 shadow-xs hover:shadow-sm transition-all">
+                    <span className="text-4xl sm:text-5xl font-extrabold font-['Outfit'] tracking-tight bg-gradient-to-r from-blue-700 via-indigo-600 to-indigo-800 bg-clip-text text-transparent drop-shadow-xs">
                       {currentPrice}
                     </span>
-                    <span className="text-2xl sm:text-3xl font-extrabold text-rose-600 ml-1 font-sans">৳</span>
+                    <span className="text-2xl sm:text-3xl font-extrabold text-blue-700 ml-1.5 font-sans">৳</span>
                   </div>
                 </div>
 
@@ -235,7 +235,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
                     <span className="text-xs sm:text-sm font-bold text-slate-800">
                       Available Seats:
                     </span>
-                    <span className="font-extrabold text-rose-600 font-['Outfit'] text-sm sm:text-base">
+                    <span className="font-extrabold text-indigo-700 font-['Outfit'] text-sm sm:text-base">
                       {availableSeats}
                     </span>
                   </div>
