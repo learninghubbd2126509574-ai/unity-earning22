@@ -12,7 +12,7 @@ import { AdminModal } from './components/AdminModal';
 import { UnityAIChatbot } from './components/UnityAIChatbot';
 import { Lock, Send, ShieldCheck, CheckCircle2, Sparkles, BookOpen, MessageSquare, Calculator, HelpCircle } from 'lucide-react';
 import { WhatsAppIcon } from './components/WhatsAppIcon';
-import { loadPricingSettings, savePricingSettings, calculateEffectivePrice, PricingSettings } from './utils/pricing';
+import { loadPricingSettings, savePricingSettings, calculateEffectivePrice, PricingSettings, DEFAULT_VIDEO_URL, DEFAULT_NAGAD_NUMBER, DEFAULT_UPAY_NUMBER } from './utils/pricing';
 import { subscribeToPricingSettings } from './lib/firebase';
 
 export default function App() {
@@ -21,7 +21,7 @@ export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
   const [selectedCourseId, setSelectedCourseId] = useState<string | undefined>(undefined);
 
-  // Initialize price and available seats from settings
+  // Initialize price, available seats, video URL & payment numbers from settings
   const [currentPrice, setCurrentPrice] = useState<number>(() => {
     const settings = loadPricingSettings();
     return calculateEffectivePrice(settings);
@@ -29,6 +29,18 @@ export default function App() {
   const [availableSeats, setAvailableSeats] = useState<number>(() => {
     const settings = loadPricingSettings();
     return settings.availableSeats ?? 41;
+  });
+  const [videoUrl, setVideoUrl] = useState<string>(() => {
+    const settings = loadPricingSettings();
+    return settings.videoUrl || DEFAULT_VIDEO_URL;
+  });
+  const [nagadNumber, setNagadNumber] = useState<string>(() => {
+    const settings = loadPricingSettings();
+    return settings.nagadNumber || DEFAULT_NAGAD_NUMBER;
+  });
+  const [upayNumber, setUpayNumber] = useState<string>(() => {
+    const settings = loadPricingSettings();
+    return settings.upayNumber || DEFAULT_UPAY_NUMBER;
   });
 
   const syncPrice = useCallback(() => {
@@ -38,12 +50,15 @@ export default function App() {
     if (typeof settings.availableSeats === 'number') {
       setAvailableSeats(settings.availableSeats);
     }
+    if (settings.videoUrl) setVideoUrl(settings.videoUrl);
+    if (settings.nagadNumber) setNagadNumber(settings.nagadNumber);
+    if (settings.upayNumber) setUpayNumber(settings.upayNumber);
   }, []);
 
   useEffect(() => {
     syncPrice();
     
-    // Subscribe to Firebase Firestore real-time pricing and seats changes
+    // Subscribe to Firebase Firestore real-time pricing, seats, video URL & numbers changes
     const unsubscribeFirebase = subscribeToPricingSettings((newSettings) => {
       savePricingSettings(newSettings);
       const effective = calculateEffectivePrice(newSettings);
@@ -51,6 +66,9 @@ export default function App() {
       if (typeof newSettings.availableSeats === 'number') {
         setAvailableSeats(newSettings.availableSeats);
       }
+      if (newSettings.videoUrl) setVideoUrl(newSettings.videoUrl);
+      if (newSettings.nagadNumber) setNagadNumber(newSettings.nagadNumber);
+      if (newSettings.upayNumber) setUpayNumber(newSettings.upayNumber);
     });
 
     // Re-check periodically in case midnight crossed
@@ -65,8 +83,13 @@ export default function App() {
 
   const handleUpdatePrice = (newPrice: number, settings?: PricingSettings) => {
     setCurrentPrice(newPrice);
-    if (settings && typeof settings.availableSeats === 'number') {
-      setAvailableSeats(settings.availableSeats);
+    if (settings) {
+      if (typeof settings.availableSeats === 'number') {
+        setAvailableSeats(settings.availableSeats);
+      }
+      if (settings.videoUrl) setVideoUrl(settings.videoUrl);
+      if (settings.nagadNumber) setNagadNumber(settings.nagadNumber);
+      if (settings.upayNumber) setUpayNumber(settings.upayNumber);
     }
   };
 
@@ -164,6 +187,9 @@ export default function App() {
               currentPrice={currentPrice}
               availableSeats={availableSeats}
               onOpenAdmin={() => setIsAdminOpen(true)}
+              videoUrl={videoUrl}
+              nagadNumber={nagadNumber}
+              upayNumber={upayNumber}
             />
 
             {/* 2. Key Features Section */}
@@ -340,6 +366,8 @@ export default function App() {
         isOpen={isActivationOpen}
         onClose={() => setIsActivationOpen(false)}
         currentPrice={currentPrice}
+        nagadNumber={nagadNumber}
+        upayNumber={upayNumber}
       />
       
       {/* Admin Panel Modal */}
@@ -348,8 +376,16 @@ export default function App() {
         onClose={() => setIsAdminOpen(false)}
         currentPrice={currentPrice}
         availableSeats={availableSeats}
+        videoUrl={videoUrl}
+        nagadNumber={nagadNumber}
+        upayNumber={upayNumber}
         onUpdatePrice={handleUpdatePrice}
         onUpdateSeats={(seats) => setAvailableSeats(seats)}
+        onUpdateSettings={(settings) => {
+          if (settings.videoUrl) setVideoUrl(settings.videoUrl);
+          if (settings.nagadNumber) setNagadNumber(settings.nagadNumber);
+          if (settings.upayNumber) setUpayNumber(settings.upayNumber);
+        }}
       />
 
       {/* Floating Unity AI Assistant Chatbot */}

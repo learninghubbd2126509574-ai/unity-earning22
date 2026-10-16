@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Send, Sparkles, Copy, ArrowRight, ShieldCheck, Clock, Zap, Calculator, CheckCircle2, Award, PartyPopper, Flame, Users, Calendar, Smartphone, Headphones } from 'lucide-react';
+import { Check, Send, Sparkles, Copy, ArrowRight, ShieldCheck, Clock, Zap, Calculator, CheckCircle2, Award, PartyPopper, Flame, Users, Calendar, Smartphone, Headphones, Play, Video, Phone, RefreshCw, Eye } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { triggerSuccessFeedback, triggerBigOfferCelebration } from '../utils/confettiFeedback';
 import { getTodayBengaliDate } from '../utils/dateUtils';
+import {
+  DEFAULT_VIDEO_URL,
+  DEFAULT_NAGAD_NUMBER,
+  DEFAULT_UPAY_NUMBER,
+  getYouTubeEmbedUrl,
+  getYouTubeThumbnailUrl,
+  extractYouTubeId,
+} from '../utils/pricing';
 
 interface OfferCardProps {
   onOpenActivation: () => void;
@@ -11,6 +19,9 @@ interface OfferCardProps {
   currentPrice: number;
   availableSeats: number;
   onOpenAdmin: () => void;
+  videoUrl?: string;
+  nagadNumber?: string;
+  upayNumber?: string;
 }
 
 export const OfferCard: React.FC<OfferCardProps> = ({
@@ -20,11 +31,19 @@ export const OfferCard: React.FC<OfferCardProps> = ({
   currentPrice,
   availableSeats,
   onOpenAdmin,
+  videoUrl = DEFAULT_VIDEO_URL,
+  nagadNumber = DEFAULT_NAGAD_NUMBER,
+  upayNumber = DEFAULT_UPAY_NUMBER,
 }) => {
   const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
   const [clickedActive, setClickedActive] = useState(false);
   const [celebratingOffer, setCelebratingOffer] = useState(false);
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const todayDate = getTodayBengaliDate();
+
+  const embedUrl = getYouTubeEmbedUrl(videoUrl, true);
+  const videoThumbnail = getYouTubeThumbnailUrl(videoUrl);
+  const ytId = extractYouTubeId(videoUrl);
 
   // Live real-time Countdown Timer (6 hours countdown as requested)
   const [timeLeft, setTimeLeft] = useState({
@@ -322,87 +341,169 @@ export const OfferCard: React.FC<OfferCardProps> = ({
               </div>
             </div>
 
-            {/* Quick Payment Number Copy Boxes */}
-            <div className="bg-slate-50 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 flex flex-col gap-2.5">
-              <div className="text-xs font-bold text-slate-700 flex items-center justify-between">
-                <span>পেমেন্ট নম্বর (Send Money):</span>
-                <span className="text-[11px] text-slate-500 font-normal">১-ক্লিকে কপি করুন</span>
-              </div>
-
-              {/* bKash Payment Row */}
-              <div className="bg-white rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-2 shadow-2xs border border-pink-100">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span className="bg-pink-600 text-white font-bold text-[11px] sm:text-xs px-2.5 py-1 rounded-md shrink-0">
-                    বিকাশ
-                  </span>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-[10px] text-slate-500 font-normal leading-none mb-0.5">পার্সোনাল নম্বর</span>
-                    <span className="text-slate-900 font-mono font-bold text-xs sm:text-sm tracking-wide truncate">
-                      01723046648
+            {/* Payment Guidelines & Numbers Box */}
+            <div className="bg-slate-50 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 flex flex-col gap-3">
+              
+              {/* 1. bKash Section: Header + Embedded Video (কোনো নাম্বার থাকবে না, উপরে লেখা থাকবে এবং নিজে একটা ভিডিও দেওয়া থাকবে যা ওয়েবসাইটে চালু হবে) */}
+              <div className="bg-white rounded-2xl p-3 sm:p-3.5 shadow-2xs border border-pink-100 flex flex-col gap-2.5">
+                <div className="flex items-center justify-between pb-1 border-b border-pink-50">
+                  <div className="flex items-center gap-2">
+                    <span className="bg-pink-600 text-white font-bold text-[11px] sm:text-xs px-2.5 py-1 rounded-md shadow-2xs">
+                      বিকাশ
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-800">
+                      বিকাশ পেমেন্ট ভিডিও গাইড
                     </span>
                   </div>
+                  <span className="text-[10px] sm:text-[11px] font-semibold text-pink-700 bg-pink-50 px-2 py-0.5 rounded-full border border-pink-200/80">
+                    ভিডিও দেখে করুন
+                  </span>
                 </div>
 
-                <button
-                  onClick={(e) => handleCopy('01723046648', e)}
-                  className={`text-xs px-3.5 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
-                    copiedNumber === '01723046648'
-                      ? 'bg-emerald-600 text-white shadow-xs'
-                      : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 active:scale-95'
-                  }`}
-                >
-                  {copiedNumber === '01723046648' ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
-                      <span>কপি হয়েছে!</span>
-                    </>
+                {/* Embedded YouTube Video Container */}
+                <div className="w-full">
+                  {isPlayingVideo ? (
+                    <div className="space-y-1.5">
+                      <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black shadow-md border border-slate-700">
+                        <iframe
+                          src={embedUrl}
+                          title="bKash Payment & Admission Video Guide"
+                          className="w-full h-full border-0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 px-1">
+                        <span>ওয়েবসাইটে সরাসরি ভিডিও চালু হয়েছে</span>
+                        <button
+                          type="button"
+                          onClick={() => setIsPlayingVideo(false)}
+                          className="text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1 cursor-pointer"
+                        >
+                          <RefreshCw className="w-3 h-3" />
+                          <span>ভিডিও মিনিমাইজ করুন</span>
+                        </button>
+                      </div>
+                    </div>
                   ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5 text-pink-600" />
-                      <span>কপি</span>
-                    </>
+                    <div
+                      onClick={() => setIsPlayingVideo(true)}
+                      className="relative w-full aspect-video rounded-xl overflow-hidden cursor-pointer group bg-slate-900 border border-pink-200/80 shadow-xs hover:shadow-md transition-all select-none"
+                      title="ক্লিক করুন এবং ওয়েবসাইটের মধ্যেই বিকাশ গাইড ভিডিওটি উপভোগ করুন!"
+                    >
+                      {videoThumbnail ? (
+                        <img
+                          src={videoThumbnail}
+                          alt="বিকাশ পেমেন্ট ভিডিও নির্দেশিকা"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-tr from-slate-900 via-pink-950 to-slate-900 flex items-center justify-center" />
+                      )}
+
+                      <div className="absolute inset-0 bg-black/45 group-hover:bg-black/30 transition-colors flex flex-col items-center justify-center p-3 text-center">
+                        <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-red-600 group-hover:bg-red-500 text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform mb-2">
+                          <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-white translate-x-0.5" />
+                        </div>
+                        <span className="text-white font-bold text-xs sm:text-sm drop-shadow-md">
+                          ▶️ বিকাশ পেমেন্ট নির্দেশিকা ভিডিও দেখুন
+                        </span>
+                        <span className="text-pink-200 text-[10px] sm:text-[11px] font-medium mt-0.5 drop-shadow-xs">
+                          (ক্লিক করলে ওয়েবসাইটের ভেতরেই ভিডিওটি চালু হবে)
+                        </span>
+                      </div>
+                    </div>
                   )}
-                </button>
+                </div>
+
+                <div className="text-[11px] text-slate-500 bg-pink-50/50 p-2 rounded-lg border border-pink-100/80 flex items-center gap-1.5">
+                  <span className="text-pink-600 font-bold shrink-0">💡 নোট:</span>
+                  <span>বিকাশে কোনো পার্সোনাল নম্বর নেই। বিস্তারিত নিয়ম ও এডমিশন তথ্য জানতে উপরের ভিডিওটি দেখুন।</span>
+                </div>
               </div>
 
-              {/* Nagad & Upay Payment Row */}
-              <div className="bg-white rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-2 shadow-2xs border border-orange-100">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold text-[11px] sm:text-xs px-2 py-1 rounded-md shrink-0">
-                    নগদ / উপায়
-                  </span>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-[10px] text-slate-500 font-normal leading-none mb-0.5">পার্সোনাল নম্বর</span>
-                    <span className="text-slate-900 font-mono font-bold text-xs sm:text-sm tracking-wide truncate">
-                      01339786909
-                    </span>
-                  </div>
+              {/* 2. Nagad & Upay Payment Numbers (রকেট বাদ, নিচে নগদ ও উপায় নম্বর দেওয়া) */}
+              <div className="space-y-2 pt-1">
+                <div className="text-xs font-bold text-slate-700 flex items-center justify-between px-1">
+                  <span>নগদ ও উপায় পার্সোনাল নম্বর (Send Money):</span>
+                  <span className="text-[11px] text-slate-500 font-normal">১-ক্লিকে কপি করুন</span>
                 </div>
 
-                <button
-                  onClick={(e) => handleCopy('01339786909', e)}
-                  className={`text-xs px-3.5 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
-                    copiedNumber === '01339786909'
-                      ? 'bg-emerald-600 text-white shadow-xs'
-                      : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 active:scale-95'
-                  }`}
-                >
-                  {copiedNumber === '01339786909' ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
-                      <span>কপি হয়েছে!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5 text-orange-600" />
-                      <span>কপি</span>
-                    </>
-                  )}
-                </button>
+                {/* Nagad Row */}
+                <div className="bg-white rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-2 shadow-2xs border border-orange-100">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="bg-gradient-to-r from-orange-600 to-amber-600 text-white font-bold text-[11px] sm:text-xs px-2.5 py-1 rounded-md shrink-0">
+                      নগদ
+                    </span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-[10px] text-slate-500 font-normal leading-none mb-0.5">পার্সোনাল নম্বর</span>
+                      <span className="text-slate-900 font-mono font-bold text-xs sm:text-sm tracking-wide truncate">
+                        {nagadNumber}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={(e) => handleCopy(nagadNumber, e)}
+                    className={`text-xs px-3.5 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
+                      copiedNumber === nagadNumber
+                        ? 'bg-emerald-600 text-white shadow-xs'
+                        : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 active:scale-95'
+                    }`}
+                  >
+                    {copiedNumber === nagadNumber ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
+                        <span>কপি হয়েছে!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5 text-orange-600" />
+                        <span>কপি</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Upay Row */}
+                <div className="bg-white rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-2 shadow-2xs border border-blue-100">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-[11px] sm:text-xs px-2.5 py-1 rounded-md shrink-0">
+                      উপায়
+                    </span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-[10px] text-slate-500 font-normal leading-none mb-0.5">পার্সোনাল নম্বর</span>
+                      <span className="text-slate-900 font-mono font-bold text-xs sm:text-sm tracking-wide truncate">
+                        {upayNumber}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={(e) => handleCopy(upayNumber, e)}
+                    className={`text-xs px-3.5 py-1.5 rounded-lg font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
+                      copiedNumber === upayNumber
+                        ? 'bg-emerald-600 text-white shadow-xs'
+                        : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 active:scale-95'
+                    }`}
+                  >
+                    {copiedNumber === upayNumber ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
+                        <span>কপি হয়েছে!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5 text-blue-600" />
+                        <span>কপি</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
 
               <p className="text-[11px] text-slate-500 text-center font-normal pt-0.5">
-                💡 "Send Money" করে ট্রানজেকশন আইডি সাথে রাখুন ও ফর্মে জমা দিন
+                💡 নগদ বা উপায়ে "Send Money" করে ট্রানজেকশন আইডি সাথে রাখুন ও ফর্মে জমা দিন
               </p>
             </div>
 

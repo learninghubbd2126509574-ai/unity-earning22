@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Lock, CheckCircle2, Save, ShieldAlert, Sliders, Calendar, Zap, Check, Radio, Users, Minus, Plus } from 'lucide-react';
+import { X, Lock, CheckCircle2, Save, Calendar, Zap, Users, Minus, Plus, Video, Phone, Play, ExternalLink } from 'lucide-react';
 import {
   PricingSettings,
   loadPricingSettings,
@@ -7,7 +7,12 @@ import {
   getAutoPriceForDate,
   getBengaliDayName,
   isSpecialWeekend,
-  DEFAULT_AVAILABLE_SEATS
+  DEFAULT_AVAILABLE_SEATS,
+  DEFAULT_VIDEO_URL,
+  DEFAULT_NAGAD_NUMBER,
+  DEFAULT_UPAY_NUMBER,
+  extractYouTubeId,
+  getYouTubeThumbnailUrl,
 } from '../utils/pricing';
 import { savePricingSettingsToFirestore } from '../lib/firebase';
 
@@ -16,8 +21,12 @@ interface AdminModalProps {
   onClose: () => void;
   currentPrice: number;
   availableSeats?: number;
+  videoUrl?: string;
+  nagadNumber?: string;
+  upayNumber?: string;
   onUpdatePrice: (newPrice: number, settings?: PricingSettings) => void;
   onUpdateSeats?: (seats: number) => void;
+  onUpdateSettings?: (settings: PricingSettings) => void;
 }
 
 export const AdminModal: React.FC<AdminModalProps> = ({ 
@@ -25,8 +34,12 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   onClose, 
   currentPrice, 
   availableSeats = DEFAULT_AVAILABLE_SEATS,
+  videoUrl = DEFAULT_VIDEO_URL,
+  nagadNumber = DEFAULT_NAGAD_NUMBER,
+  upayNumber = DEFAULT_UPAY_NUMBER,
   onUpdatePrice,
-  onUpdateSeats
+  onUpdateSeats,
+  onUpdateSettings
 }) => {
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,6 +48,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   const [isAutoPricing, setIsAutoPricing] = useState<boolean>(true);
   const [manualPrice, setManualPrice] = useState<number>(currentPrice);
   const [seatsCount, setSeatsCount] = useState<number>(availableSeats);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState<string>(videoUrl);
+  const [currentNagad, setCurrentNagad] = useState<string>(nagadNumber);
+  const [currentUpay, setCurrentUpay] = useState<string>(upayNumber);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
@@ -43,8 +59,11 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       setIsAutoPricing(settings.isAutoPricing);
       setManualPrice(settings.manualPrice || currentPrice);
       setSeatsCount(settings.availableSeats ?? availableSeats);
+      setCurrentVideoUrl(settings.videoUrl || videoUrl || DEFAULT_VIDEO_URL);
+      setCurrentNagad(settings.nagadNumber || nagadNumber || DEFAULT_NAGAD_NUMBER);
+      setCurrentUpay(settings.upayNumber || upayNumber || DEFAULT_UPAY_NUMBER);
     }
-  }, [isOpen, currentPrice, availableSeats]);
+  }, [isOpen, currentPrice, availableSeats, videoUrl, nagadNumber, upayNumber]);
 
   if (!isOpen) return null;
 
@@ -55,6 +74,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   const isWeekend = isSpecialWeekend(todayDate);
   const autoCalculatedTodayPrice = getAutoPriceForDate(todayDate);
 
+  const youtubeId = extractYouTubeId(currentVideoUrl);
+  const videoThumb = getYouTubeThumbnailUrl(currentVideoUrl);
+
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password.trim() === ADMIN_PASS || password.trim() === 'admin') {
@@ -64,6 +86,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       setIsAutoPricing(settings.isAutoPricing);
       setManualPrice(settings.manualPrice || currentPrice);
       setSeatsCount(settings.availableSeats ?? availableSeats);
+      setCurrentVideoUrl(settings.videoUrl || videoUrl || DEFAULT_VIDEO_URL);
+      setCurrentNagad(settings.nagadNumber || nagadNumber || DEFAULT_NAGAD_NUMBER);
+      setCurrentUpay(settings.upayNumber || upayNumber || DEFAULT_UPAY_NUMBER);
     } else {
       setErrorMsg('ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড বা Admin ID (212650) দিন।');
     }
@@ -74,7 +99,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     const newSettings: PricingSettings = {
       isAutoPricing,
       manualPrice,
-      availableSeats: seatsCount
+      availableSeats: seatsCount,
+      videoUrl: currentVideoUrl.trim() || DEFAULT_VIDEO_URL,
+      nagadNumber: currentNagad.trim() || DEFAULT_NAGAD_NUMBER,
+      upayNumber: currentUpay.trim() || DEFAULT_UPAY_NUMBER,
     };
     savePricingSettings(newSettings);
 
@@ -88,6 +116,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     onUpdatePrice(effectivePrice, newSettings);
     if (onUpdateSeats) {
       onUpdateSeats(seatsCount);
+    }
+    if (onUpdateSettings) {
+      onUpdateSettings(newSettings);
     }
     
     setSaveSuccess(true);
@@ -107,7 +138,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in font-['Hind_Siliguri']">
-      <div className="bg-white border border-slate-200 rounded-3xl w-full max-w-lg p-6 sm:p-7 shadow-2xl relative overflow-hidden text-slate-900 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white border border-slate-200 rounded-3xl w-full max-w-lg p-5 sm:p-7 shadow-2xl relative overflow-hidden text-slate-900 max-h-[92vh] overflow-y-auto">
         
         {/* Header bar */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-emerald-500 to-indigo-600" />
@@ -128,7 +159,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               </div>
               <div>
                 <h3 className="text-lg font-black text-slate-900 tracking-tight">অ্যাডমিন প্যানেল লগইন</h3>
-                <p className="text-xs text-slate-500 font-medium">অটোমেটিক ক্যালেন্ডার, প্রাইসিং ও আসন সংখ্যা কন্ট্রোল</p>
+                <p className="text-xs text-slate-500 font-medium">ভিডিও লিংক, পেমেন্ট নম্বর, প্রাইসিং ও আসন সংখ্যা কন্ট্রোল</p>
               </div>
             </div>
 
@@ -151,138 +182,206 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               </div>
 
               {errorMsg && (
-                <div className="bg-red-50 border border-red-200 text-red-700 text-xs p-2.5 rounded-xl flex items-center gap-2 font-medium">
-                  <ShieldAlert className="w-4 h-4 text-red-500 shrink-0" />
+                <div className="text-xs text-rose-600 bg-rose-50 border border-rose-200 px-3 py-2 rounded-xl flex items-center gap-1.5 font-medium">
                   <span>{errorMsg}</span>
                 </div>
               )}
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs sm:text-sm shadow-xs transition-all cursor-pointer"
+                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
               >
-                লগইন করুন (Login) →
+                <span>লগইন করুন</span>
               </button>
+
+              <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-[11px] text-slate-500 text-center">
+                🔒 ডিফল্ট Admin ID / পাসওয়ার্ড: <strong className="text-slate-800 font-mono">212650</strong>
+              </div>
             </form>
           </div>
         ) : (
-          <div className="space-y-5 py-2">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shrink-0 shadow-2xs">
-                <Sliders className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-lg font-black text-slate-900 tracking-tight">অ্যাডমিন কন্ট্রোল সেন্টার</h3>
-                <p className="text-xs text-emerald-700 font-bold">ক্যালেন্ডার প্রাইসিং ও লাইভ Available Seats সেটিংস</p>
-              </div>
-            </div>
-
-            {/* 1. Available Seats Control Section */}
-            <div className="bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-orange-500/10 p-4 sm:p-5 rounded-2xl border-2 border-amber-300 shadow-xs space-y-3.5">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 text-white flex items-center justify-center shadow-xs">
-                    <Users className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-sm text-slate-900">Available Seats (আসন সংখ্যা)</h4>
-                    <p className="text-[11px] text-slate-600">অফার পোর্টফোলিওতে প্রদর্শিত লাইভ আসন নিয়ন্ত্রণ</p>
-                  </div>
+          <div className="space-y-5 pt-2">
+            
+            {/* Header Title */}
+            <div className="border-b border-slate-200 pb-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-black text-slate-900">অ্যাডমিন কন্ট্রোল সেন্টার</h3>
+                  <p className="text-xs text-slate-500">ইউটিউব ভিডিও লিংক, পেমেন্ট নম্বর ও অফার সেটিংস</p>
                 </div>
-
-                <div className="text-right">
-                  <span className="text-[11px] font-black text-rose-700 bg-white border border-rose-300 px-2.5 py-1 rounded-lg shadow-2xs">
-                    বর্তমান আসন: {seatsCount} টি
-                  </span>
-                </div>
-              </div>
-
-              {/* Number Input & Stepper */}
-              <div className="bg-white p-3 rounded-xl border border-amber-200 flex items-center justify-between gap-2 shadow-xs">
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => setSeatsCount(prev => Math.max(0, prev - 5))}
-                    className="px-2 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
-                    title="-5 আসন"
-                  >
-                    -5
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSeatsCount(prev => Math.max(0, prev - 1))}
-                    className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
-                    title="-1 আসন"
-                  >
-                    <Minus className="w-4 h-4" />
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-slate-600">Available Seats:</span>
-                  <input
-                    type="number"
-                    min="0"
-                    max="999"
-                    value={seatsCount}
-                    onChange={(e) => {
-                      const val = parseInt(e.target.value, 10);
-                      setSeatsCount(isNaN(val) ? 0 : Math.max(0, val));
-                    }}
-                    className="w-18 text-center font-black text-lg font-['Outfit'] text-rose-600 bg-rose-50/70 border-2 border-rose-300 rounded-lg py-1 px-1 focus:outline-none focus:ring-2 focus:ring-rose-400"
-                  />
-                  <span className="text-xs font-black text-rose-700">টি</span>
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => setSeatsCount(prev => prev + 1)}
-                    className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
-                    title="+1 আসন"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSeatsCount(prev => prev + 5)}
-                    className="px-2 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
-                    title="+5 আসন"
-                  >
-                    +5
-                  </button>
-                </div>
-              </div>
-
-              {/* Quick Preset Buttons */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5">
-                <span className="text-[11px] font-bold text-slate-600 shrink-0">কুইক প্রিসেট:</span>
-                {[41, 35, 25, 18, 10, 5].map((count) => (
-                  <button
-                    key={count}
-                    type="button"
-                    onClick={() => setSeatsCount(count)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                      seatsCount === count
-                        ? 'bg-rose-600 text-white shadow-xs scale-105'
-                        : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
-                    }`}
-                  >
-                    {count}
-                  </button>
-                ))}
-              </div>
-
-              {/* Live Preview Display */}
-              <div className="p-2.5 rounded-xl bg-white/90 border border-amber-200/90 flex items-center justify-between text-xs">
-                <span className="text-slate-600 font-semibold">পোর্টফোলিওতে শো করবে:</span>
-                <span className="font-black text-rose-700 bg-rose-50 px-2.5 py-0.5 rounded-md border border-rose-200 shadow-2xs">
-                  Available Seats: {seatsCount}
+                <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-full border border-emerald-200 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  ভেরিফাইড অ্যাডমিন
                 </span>
               </div>
             </div>
 
-            {/* 2. Auto Mode ON/OFF Switch */}
+            {/* 1. YouTube Video Setting (NEW) */}
+            <div className="bg-gradient-to-br from-pink-50/70 via-rose-50/30 to-slate-50 p-4 sm:p-5 rounded-2xl border border-pink-200/80 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-pink-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <Video className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-slate-900">বিকাশ ও এডমিশন ভিডিও (YouTube Link)</h4>
+                    <p className="text-[11px] text-slate-500">ওয়েবসাইটের বিকাশ সেকশনে সরাসরি এই ভিডিওটি প্লে হবে</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  ইউটিউব ভিডিও লিঙ্ক:
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={currentVideoUrl}
+                    onChange={(e) => setCurrentVideoUrl(e.target.value)}
+                    placeholder="https://www.youtube.com/watch?v=..."
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-pink-500 shadow-2xs font-mono"
+                  />
+                  {currentVideoUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setCurrentVideoUrl('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs px-1"
+                    >
+                      মুছুন
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Live Detected Preview */}
+              {youtubeId ? (
+                <div className="bg-white p-3 rounded-xl border border-pink-200 flex items-center gap-3">
+                  <div className="w-20 h-12 bg-slate-900 rounded-lg overflow-hidden relative shrink-0">
+                    {videoThumb ? (
+                      <img src={videoThumb} alt="YouTube thumbnail" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-white">
+                        <Play className="w-5 h-5 fill-white" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                      <Play className="w-4 h-4 text-white fill-white" />
+                    </div>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-700">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span>সঠিক ইউটিউব লিংক সনাক্ত হয়েছে!</span>
+                    </div>
+                    <span className="text-[10px] text-slate-500 truncate block font-mono">
+                      Video ID: {youtubeId}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-amber-50 text-amber-800 text-[11px] p-2.5 rounded-xl border border-amber-200">
+                  ⚠️ যে কোনো ইউটিউব ভিডিওর লিঙ্ক পেস্ট করুন (যেমন: https://youtu.be/xxx বা https://www.youtube.com/watch?v=xxx)
+                </div>
+              )}
+            </div>
+
+            {/* 2. Nagad & Upay Payment Numbers */}
+            <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-orange-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm text-slate-900">নগদ ও উপায় পেমেন্ট নম্বর</h4>
+                  <p className="text-[11px] text-slate-500">ভিডিওর নিচে নগদ ও উপায় নম্বর হিসেবে প্রদর্শিত হবে</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    নগদ পার্সোনাল নম্বর:
+                  </label>
+                  <input
+                    type="text"
+                    value={currentNagad}
+                    onChange={(e) => setCurrentNagad(e.target.value)}
+                    placeholder="01339786909"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 font-mono focus:outline-none focus:border-orange-500 shadow-2xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    উপায় পার্সোনাল নম্বর:
+                  </label>
+                  <input
+                    type="text"
+                    value={currentUpay}
+                    onChange={(e) => setCurrentUpay(e.target.value)}
+                    placeholder="01339786909"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 font-mono focus:outline-none focus:border-orange-500 shadow-2xs"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Available Seats Control */}
+            <div className="bg-amber-50/70 p-4 sm:p-5 rounded-2xl border border-amber-200/90 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <Users className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-slate-900">Available Seats (আসন সংখ্যা)</h4>
+                    <p className="text-[11px] text-slate-500">ওয়েবসাইটে ডিসপ্লে হওয়া সিট সংখ্যা</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-3 pt-1">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSeatsCount(prev => Math.max(1, prev - 1))}
+                    className="w-9 h-9 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 font-bold flex items-center justify-center cursor-pointer shadow-2xs"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="font-mono text-xl sm:text-2xl font-black text-rose-600 bg-white px-4 py-1 rounded-xl border border-rose-200 min-w-16 text-center shadow-2xs">
+                    {seatsCount}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setSeatsCount(prev => prev + 1)}
+                    className="w-9 h-9 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 font-bold flex items-center justify-center cursor-pointer shadow-2xs"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  {[41, 25, 12, 5].map((cnt) => (
+                    <button
+                      key={cnt}
+                      type="button"
+                      onClick={() => setSeatsCount(cnt)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        seatsCount === cnt
+                          ? 'bg-rose-600 text-white shadow-xs'
+                          : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      {cnt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Pricing Mode */}
             <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-4">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
@@ -291,11 +390,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-slate-900">অটোমেটিক ক্যালেন্ডার প্রাইসিং</h4>
-                    <p className="text-[11px] text-slate-500">দিন অনুযায়ী স্বয়ংক্রিয়ভাবে দাম নির্ধারণ</p>
+                    <p className="text-[11px] text-slate-500">শুক্র-শনি ৪৯৯৳, বাকি ৫ দিন ৫৯৯৳</p>
                   </div>
                 </div>
 
-                {/* Toggle Button */}
                 <button
                   type="button"
                   onClick={() => setIsAutoPricing(prev => !prev)}
@@ -311,70 +409,22 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 </button>
               </div>
 
-              {/* Status Badge and Details */}
-              {isAutoPricing ? (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-emerald-800 flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      অটো প্রাইসিং একটিভ (ON)
-                    </span>
-                    <span className="text-[11px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-md">
-                      আজ: {todayDayName} ({autoCalculatedTodayPrice}৳)
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 text-xs pt-1">
-                    <div className={`p-2.5 rounded-lg border ${isWeekend ? 'bg-white border-emerald-400 shadow-2xs ring-1 ring-emerald-400' : 'bg-white/60 border-slate-200'}`}>
-                      <div className="font-bold text-slate-900 flex items-center justify-between">
-                        <span>শুক্র ও শনিবার</span>
-                        {isWeekend && <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 rounded font-black">আজ সক্রিয়</span>}
-                      </div>
-                      <div className="text-base font-black text-blue-600 mt-1">৪৯৯ ৳</div>
-                      <div className="text-[10px] text-slate-500">উইকএন্ড স্পেশাল অফার</div>
-                    </div>
-
-                    <div className={`p-2.5 rounded-lg border ${!isWeekend ? 'bg-white border-emerald-400 shadow-2xs ring-1 ring-emerald-400' : 'bg-white/60 border-slate-200'}`}>
-                      <div className="font-bold text-slate-900 flex items-center justify-between">
-                        <span>বাকি ৫ দিন (রবি-বৃহস্পতি)</span>
-                        {!isWeekend && <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 rounded font-black">আজ সক্রিয়</span>}
-                      </div>
-                      <div className="text-base font-black text-slate-800 mt-1">৫৯৯ ৳</div>
-                      <div className="text-[10px] text-slate-500">রেগুলার অফার প্রাইস</div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-[11px] text-slate-600 leading-tight">
-                    💡 <strong>স্বয়ংক্রিয় সিস্টেম:</strong> অ্যাডমিন থেকে হাত দিয়ে পরিবর্তন করতে হবে না। প্রতি শুক্রবার ও শনিবার স্বয়ংক্রিয়ভাবে ৪৯৯৳ এবং বাকি ৫ দিন ৫৯৯৳ সব জায়গায় শো করবে।
-                  </p>
-                </div>
-              ) : (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 space-y-3">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900">
-                    <Zap className="w-3.5 h-3.5 text-amber-600" />
-                    <span>ম্যানুয়াল মোড (অটো প্রাইসিং বন্ধ)</span>
-                  </div>
-                  
-                  <p className="text-[11px] text-slate-600">
-                    ম্যানুয়ালি যেকোনো নির্দিষ্ট অফার রেট ফিক্সড রাখতে নিচের বাটন থেকে নির্বাচন করুন:
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-2">
+              {!isAutoPricing && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 space-y-2">
+                  <span className="text-xs font-bold text-amber-900 block">ম্যানুয়াল ফিক্সড রেট নির্বাচন করুন:</span>
+                  <div className="grid grid-cols-4 gap-2">
                     {[499, 599, 650, 750].map(p => (
                       <button
                         key={p}
                         type="button"
                         onClick={() => setManualPrice(p)}
-                        className={`p-2.5 rounded-xl text-xs font-extrabold border text-center transition-all cursor-pointer flex flex-col items-center justify-center ${
+                        className={`p-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                           manualPrice === p
                             ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
                             : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                         }`}
                       >
-                        <span className="text-sm font-black">{p} ৳</span>
-                        <span className={`text-[10px] font-normal ${manualPrice === p ? 'text-blue-100' : 'text-slate-500'}`}>
-                          {p === 499 ? 'শুক্র-শনি রেট' : p === 599 ? 'অন্য ৫ দিন রেট' : `${p} Tk Package`}
-                        </span>
+                        {p} ৳
                       </button>
                     ))}
                   </div>
@@ -384,10 +434,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
             <form onSubmit={handleSaveSettings} className="space-y-3.5">
               {saveSuccess && (
-                <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs p-2.5 rounded-xl flex items-center gap-2 animate-fade-in font-medium">
+                <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs p-3 rounded-xl flex items-center gap-2 animate-fade-in font-medium">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>
-                    সফলভাবে সেভ হয়েছে! Available Seats: {seatsCount} এবং মূল্য: {isAutoPricing ? `অটো মোডে (${autoCalculatedTodayPrice}৳)` : `ম্যানুয়াল মোডে (${manualPrice}৳)`} কার্যকর হয়েছে।
+                    সব সেটিংস (ইউটিউব ভিডিও, পেমেন্ট নম্বর, প্রাইস ও আসন) সফলভাবে সেভ হয়েছে!
                   </span>
                 </div>
               )}
@@ -403,10 +453,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                 <button
                   type="submit"
-                  className="w-2/3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
+                  className="w-2/3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
                 >
                   <Save className="w-4 h-4" />
-                  <span>Save সেভ করুন</span>
+                  <span>Save সেটিংস সেভ করুন</span>
                 </button>
               </div>
             </form>

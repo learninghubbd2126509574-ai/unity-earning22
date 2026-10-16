@@ -24,7 +24,7 @@ export const db = firestoreDb;
 const PRICING_DOC_PATH = ['settings', 'pricing'] as const;
 
 /**
- * Real-time listener for pricing settings & available seats across all devices.
+ * Real-time listener for pricing settings, available seats, video URL & payment numbers across all devices.
  */
 export function subscribeToPricingSettings(
   onUpdate: (settings: PricingSettings) => void,
@@ -41,6 +41,9 @@ export function subscribeToPricingSettings(
             isAutoPricing: data.isAutoPricing ?? true,
             manualPrice: Number(data.manualPrice) || 499,
             availableSeats: typeof data.availableSeats === 'number' ? data.availableSeats : DEFAULT_AVAILABLE_SEATS,
+            videoUrl: data.videoUrl || undefined,
+            nagadNumber: data.nagadNumber || undefined,
+            upayNumber: data.upayNumber || undefined,
           });
         }
       },
@@ -57,29 +60,30 @@ export function subscribeToPricingSettings(
 }
 
 /**
- * Saves pricing settings & available seats to Firestore in real-time so all users get instantly updated.
+ * Saves pricing, seat settings, video URL & payment numbers to Firestore in real-time.
  */
 export async function savePricingSettingsToFirestore(settings: PricingSettings): Promise<void> {
   try {
     const docRef = doc(db, PRICING_DOC_PATH[0], PRICING_DOC_PATH[1]);
-    await setDoc(
-      docRef,
-      {
-        isAutoPricing: settings.isAutoPricing,
-        manualPrice: settings.manualPrice,
-        availableSeats: settings.availableSeats ?? DEFAULT_AVAILABLE_SEATS,
-        updatedAt: new Date().toISOString(),
-      },
-      { merge: true }
-    );
+    const payload: Record<string, any> = {
+      isAutoPricing: settings.isAutoPricing,
+      manualPrice: settings.manualPrice,
+      availableSeats: settings.availableSeats ?? DEFAULT_AVAILABLE_SEATS,
+      updatedAt: new Date().toISOString(),
+    };
+    if (settings.videoUrl) payload.videoUrl = settings.videoUrl;
+    if (settings.nagadNumber) payload.nagadNumber = settings.nagadNumber;
+    if (settings.upayNumber) payload.upayNumber = settings.upayNumber;
+
+    await setDoc(docRef, payload, { merge: true });
   } catch (err) {
-    console.error('Error saving pricing and seat settings to Firestore:', err);
+    console.error('Error saving settings to Firestore:', err);
     throw err;
   }
 }
 
 /**
- * Fetch initial pricing settings & available seats from Firestore once.
+ * Fetch initial settings from Firestore once.
  */
 export async function fetchPricingSettingsFromFirestore(): Promise<PricingSettings | null> {
   try {
@@ -91,6 +95,9 @@ export async function fetchPricingSettingsFromFirestore(): Promise<PricingSettin
         isAutoPricing: data.isAutoPricing ?? true,
         manualPrice: Number(data.manualPrice) || 499,
         availableSeats: typeof data.availableSeats === 'number' ? data.availableSeats : DEFAULT_AVAILABLE_SEATS,
+        videoUrl: data.videoUrl || undefined,
+        nagadNumber: data.nagadNumber || undefined,
+        upayNumber: data.upayNumber || undefined,
       };
     }
     return null;

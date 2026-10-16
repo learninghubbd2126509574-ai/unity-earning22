@@ -7,10 +7,18 @@ interface ActivationModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentPrice: number;
+  nagadNumber?: string;
+  upayNumber?: string;
 }
 
-export const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClose, currentPrice }) => {
-  const [method, setMethod] = useState<'bKash' | 'Nagad' | 'Rocket' | 'Upay' | 'mCash'>('bKash');
+export const ActivationModal: React.FC<ActivationModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  currentPrice,
+  nagadNumber = '01339786909',
+  upayNumber = '01339786909'
+}) => {
+  const [method, setMethod] = useState<'Nagad' | 'Upay' | 'bKash'>('Nagad');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [trxId, setTrxId] = useState('');
@@ -25,18 +33,16 @@ export const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClos
 
   const getPaymentNumber = () => {
     switch (method) {
-      case 'bKash': return '01723046648';
-      case 'Nagad': return '01339786909';
-      case 'Rocket': return '013397869094';
-      case 'Upay': return '01339786909';
-      case 'mCash': return '013397869095';
-      default: return '01723046648';
+      case 'Nagad': return nagadNumber;
+      case 'Upay': return upayNumber;
+      case 'bKash': return '(ভিডিও নির্দেশিকা দেখুন)';
+      default: return nagadNumber;
     }
   };
 
   const currentPaymentNumber = getPaymentNumber();
 
-  const handleSelectMethod = (m: 'bKash' | 'Nagad' | 'Rocket' | 'Upay' | 'mCash') => {
+  const handleSelectMethod = (m: 'Nagad' | 'Upay' | 'bKash') => {
     setMethod(m);
     setCopied(false);
     triggerSuccessFeedback({ x: 0.5, y: 0.35 });
@@ -102,27 +108,23 @@ export const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClos
                 </span>
               </label>
               <div className="grid grid-cols-3 gap-2">
-                {(['bKash', 'Nagad', 'Rocket', 'Upay', 'mCash'] as const).map((m) => (
+                {(['Nagad', 'Upay', 'bKash'] as const).map((m) => (
                   <button
                     key={m}
                     type="button"
                     onClick={() => handleSelectMethod(m)}
                     className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 ${
                       method === m
-                        ? m === 'bKash'
-                          ? 'bg-pink-600 border-pink-600 text-white shadow-xs'
-                          : m === 'Nagad'
+                        ? m === 'Nagad'
                           ? 'bg-orange-600 border-orange-600 text-white shadow-xs'
-                          : m === 'Rocket'
-                          ? 'bg-purple-600 border-purple-600 text-white shadow-xs'
                           : m === 'Upay'
                           ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
-                          : 'bg-red-600 border-red-600 text-white shadow-xs'
+                          : 'bg-pink-600 border-pink-600 text-white shadow-xs'
                         : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
                     }`}
                   >
                     {method === m && <Check className="w-3 h-3 stroke-[3]" />}
-                    <span>{m === 'bKash' ? 'বিকাশ' : m === 'Nagad' ? 'নগদ' : m === 'Rocket' ? 'রকেট' : m === 'Upay' ? 'উপায়' : 'এম ক্যাশ'}</span>
+                    <span>{m === 'Nagad' ? 'নগদ' : m === 'Upay' ? 'উপায়' : 'বিকাশ'}</span>
                   </button>
                 ))}
               </div>
@@ -130,39 +132,53 @@ export const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClos
 
             {/* Step 2: Payment Number Box */}
             <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/90 relative">
-              <div className="flex items-center justify-between text-xs">
-                <div>
-                  <span className="text-slate-500 block text-[11px] font-normal">আমাদের {method} পার্সোনাল নম্বর:</span>
-                  <strong className="text-slate-900 text-sm font-mono tracking-wide bg-white px-2 py-0.5 rounded-lg border border-slate-200 shadow-2xs inline-block mt-0.5">
-                    {currentPaymentNumber}
-                  </strong>
+              {method === 'bKash' ? (
+                <div className="space-y-1.5 text-xs">
+                  <div className="flex items-center gap-2 text-pink-700 font-bold">
+                    <span className="bg-pink-600 text-white text-[10px] px-2 py-0.5 rounded-md">বিকাশ</span>
+                    <span>বিকাশে কোনো পার্সোনাল নম্বর নেই</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed font-normal">
+                    ওয়েবসাইটের হোমপেজে দেওয়া <strong>বিকাশ ভিডিও গাইডটি</strong> দেখুন অথবা সহজে সরাসরি <strong>নগদ</strong> বা <strong>উপায়</strong> নম্বরে Send Money করুন।
+                  </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={handleCopy}
-                  className={`text-xs px-3 py-1.5 rounded-xl flex items-center gap-1.5 font-bold transition-all cursor-pointer ${
-                    copied
-                      ? 'neu-btn-emerald text-white'
-                      : 'neu-btn-primary text-white'
-                  }`}
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 stroke-[3] text-white" />
-                      <span>কপি হয়েছে!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5" />
-                      <span>নম্বর কপি</span>
-                    </>
-                  )}
-                </button>
-              </div>
-              <p className="text-[11px] text-slate-600 mt-2 font-normal flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
-                <span>{method} এর <strong className="text-indigo-700 font-bold">"Send Money"</strong> অপশন থেকে {currentPrice} টাকা সেন্ড করুন।</span>
-              </p>
+              ) : (
+                <div className="flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-slate-500 block text-[11px] font-normal">আমাদের {method === 'Nagad' ? 'নগদ' : 'উপায়'} পার্সোনাল নম্বর:</span>
+                    <strong className="text-slate-900 text-sm font-mono tracking-wide bg-white px-2 py-0.5 rounded-lg border border-slate-200 shadow-2xs inline-block mt-0.5">
+                      {currentPaymentNumber}
+                    </strong>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCopy}
+                    className={`text-xs px-3 py-1.5 rounded-xl flex items-center gap-1.5 font-bold transition-all cursor-pointer ${
+                      copied
+                        ? 'neu-btn-emerald text-white'
+                        : 'neu-btn-primary text-white'
+                    }`}
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 stroke-[3] text-white" />
+                        <span>কপি হয়েছে!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>নম্বর কপি</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+              {method !== 'bKash' && (
+                <p className="text-[11px] text-slate-600 mt-2 font-normal flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
+                  <span>{method === 'Nagad' ? 'নগদ' : 'উপায়'} এর <strong className="text-indigo-700 font-bold">"Send Money"</strong> অপশন থেকে {currentPrice} টাকা সেন্ড করুন।</span>
+                </p>
+              )}
             </div>
 
             {/* Step 3: Fill Transaction Details */}
