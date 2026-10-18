@@ -207,6 +207,7 @@ export default function App() {
               onOpenActivation={() => setIsActivationOpen(true)} 
               selectedCourseId={selectedCourseId} 
               currentPrice={currentPrice}
+              availableSeats={availableSeats}
             />
 
             {/* 5. FAQ Section */}
@@ -229,6 +230,7 @@ export default function App() {
               onOpenActivation={() => setIsActivationOpen(true)}
               selectedCourseId={selectedCourseId}
               currentPrice={currentPrice}
+              availableSeats={availableSeats}
             />
           </div>
         )}
@@ -253,61 +255,218 @@ export default function App() {
 
       </main>
 
-      {/* Modern Clean Footer (Stripe / Coursera style) */}
-      <footer className="bg-white border-t border-[#E4E7EC] text-[#667085] text-xs py-8 px-4 mt-12 pb-24 sm:pb-8">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-          
-          <div>
-            <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-lg flex items-center justify-center md:justify-start gap-1.5 uppercase tracking-tight text-[#101828]">
-              <span>UNITY</span>
-              <span className="text-[#315CF5]">EARNING</span>
+      {/* Professional Multi-Column Educational Footer */}
+      <footer className="bg-white border-t border-[#E4E7EC] text-[#667085] text-xs pt-12 pb-24 sm:pb-12 px-4 sm:px-6 mt-14">
+        <div className="max-w-6xl mx-auto">
+          {/* Main 4-Column Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 pb-10 border-b border-[#E4E7EC]">
+            
+            {/* Col 1 (lg:col-span-4): Brand & Platform Mission */}
+            <div className="lg:col-span-4 space-y-3.5">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-[#315CF5] flex items-center justify-center text-white font-bold text-sm">
+                  UE
+                </div>
+                <div>
+                  <div className="font-['Plus_Jakarta_Sans',sans-serif] font-black text-lg tracking-tight leading-none text-[#101828] uppercase">
+                    <span>UNITY</span>
+                    <span className="text-[#315CF5]">EARNING</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-[#315CF5] tracking-wider uppercase block mt-0.5">
+                    E-Learning Platform
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-xs text-[#667085] leading-relaxed max-w-sm font-normal">
+                Unity Earning E-Learning Platform - বাস্তবমুখী আইটি দক্ষতা উন্নয়ন, আধুনিক ফ্রিল্যান্সিং গাইডলাইন ও শিক্ষার্থীদের জন্য নির্ভরযোগ্য অনলাইন ক্যারিয়ার হাব।
+              </p>
+
+              {/* Official Social Badges */}
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <a 
+                  href="https://whatsapp.com/channel/0029VbB4RqI3mFY5nkzbCs0p" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn-emerald h-8 px-3 text-xs font-bold"
+                  title="হোয়াটসঅ্যাপ চ্যানেল"
+                >
+                  <WhatsAppIcon size={14} className="w-3.5 h-3.5 text-white" />
+                  <span>WhatsApp</span>
+                </a>
+
+                <a 
+                  href="https://t.me/unityearning12" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn-telegram h-8 px-3 text-xs font-bold"
+                  title="টেলিগ্রাম চ্যানেল"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Telegram</span>
+                </a>
+
+                <span className="bg-[#ECFDF5] text-[#079669] px-2.5 py-1.5 rounded-lg text-[11px] font-bold border border-[#A7F3D0]">
+                  ৳৩০০ ক্যাশব্যাক
+                </span>
+              </div>
             </div>
-            <div className="text-[10px] text-[#315CF5] font-bold uppercase tracking-wider mt-0.5">
-              E-Learning Platform
+
+            {/* Col 2 (lg:col-span-3): Popular Courses */}
+            <div className="lg:col-span-3 space-y-2.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#101828]">
+                জনপ্রিয় কোর্সসমূহ
+              </h4>
+              <ul className="space-y-2 text-xs">
+                <li>
+                  <button 
+                    onClick={() => handleSelectCourse('data-entry')}
+                    className="hover:text-[#315CF5] transition-colors cursor-pointer text-left"
+                  >
+                    • ডাটা এন্ট্রি স্পেশালাইজেশন
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => handleSelectCourse('digital-marketing')}
+                    className="hover:text-[#315CF5] transition-colors cursor-pointer text-left"
+                  >
+                    • ডিজিটাল মার্কেটিং ও এসইও
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => handleSelectCourse('graphic-design')}
+                    className="hover:text-[#315CF5] transition-colors cursor-pointer text-left"
+                  >
+                    • গ্রাফিক ডিজাইন ও ক্যানভা
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => handleSelectCourse('video-editing')}
+                    className="hover:text-[#315CF5] transition-colors cursor-pointer text-left"
+                  >
+                    • ভিডিও এডিটিং ও রিলস মেকিং
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => handleSelectCourse('content-writing')}
+                    className="hover:text-[#315CF5] transition-colors cursor-pointer text-left"
+                  >
+                    • কন্টেন্ট অ্যান্ড আর্টিকেল রাইটিং
+                  </button>
+                </li>
+              </ul>
             </div>
-            <p className="text-xs text-[#667085] mt-1 max-w-sm font-normal">
-              Unity Earning E-Learning Platform - নির্ভরযোগ্য আইটি স্কিল ও অনলাইন ক্যারিয়ার হাব।
-            </p>
+
+            {/* Col 3 (lg:col-span-2): Quick Navigation */}
+            <div className="lg:col-span-2 space-y-2.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#101828]">
+                কুইক লিংকস
+              </h4>
+              <ul className="space-y-2 text-xs">
+                <li>
+                  <button 
+                    onClick={() => { setActiveSection('card'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    className="hover:text-[#315CF5] transition-colors cursor-pointer"
+                  >
+                    অফার ড্যাশবোর্ড
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => { setActiveSection('courses'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    className="hover:text-[#315CF5] transition-colors cursor-pointer"
+                  >
+                    কোর্স ক্যাটালগ
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => { setActiveSection('reviews'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    className="hover:text-[#315CF5] transition-colors cursor-pointer"
+                  >
+                    শিক্ষার্থীদের রিভিউ
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => { setActiveSection('calculator'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    className="hover:text-[#315CF5] transition-colors cursor-pointer"
+                  >
+                    ইনকাম ক্যালকুলেটর
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => { setActiveSection('faq'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    className="hover:text-[#315CF5] transition-colors cursor-pointer"
+                  >
+                    সচরাচর প্রশ্ন-উত্তর
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 4 (lg:col-span-3): Trust & Support Policy */}
+            <div className="lg:col-span-3 space-y-2.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#101828]">
+                নিরাপত্তা ও সহায়তা
+              </h4>
+              <div className="space-y-2 text-xs text-[#667085]">
+                <div className="flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#079669] shrink-0 mt-0.5" />
+                  <span>২৪/৭ ডেডিকেটেড মেন্টর ও কাউন্সিলর সহায়তা</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#079669] shrink-0 mt-0.5" />
+                  <span>লোকাল বিকাশ ও নগদ পার্সোনাল ক্যাশআউট</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <ShieldCheck className="w-4 h-4 text-[#315CF5] shrink-0 mt-0.5" />
+                  <span>ভেরিফাইড লাইফটাইম মেম্বারশিপ এক্সেস</span>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsActivationOpen(true)}
+                  className="btn-primary w-full h-9 text-xs font-bold cursor-pointer"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>আইডি অ্যাক্টিভেশন ফর্ম</span>
+                </button>
+              </div>
+            </div>
+
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2.5 text-xs font-semibold">
-            <a 
-              href="https://t.me/unityearning12" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="btn-telegram h-9 px-3 text-xs"
-            >
-              <Send className="w-3.5 h-3.5" />
-              <span>@unityearning12</span>
-            </a>
+          {/* Bottom Bar: Copyright, Terms & Admin Link */}
+          <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#667085] text-center md:text-left">
+            <div>
+              <span>© {new Date().getFullYear()} Unity Earning E-Learning Platform. সর্বস্বত্ব সংরক্ষিত।</span>
+            </div>
 
-            <a 
-              href="https://whatsapp.com/channel/0029VbB4RqI3mFY5nkzbCs0p" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="btn-emerald h-9 px-3 text-xs"
-            >
-              <WhatsAppIcon size={14} className="w-3.5 h-3.5 text-white" />
-              <span>হোয়াটসঅ্যাপ চ্যানেল</span>
-            </a>
-
-            <span className="bg-[#ECFDF5] text-[#079669] px-3 py-1.5 rounded-lg font-bold border border-[#A7F3D0]">
-              ক্যাশব্যাক: ৩০০৳
-            </span>
+            <div className="flex items-center gap-4 flex-wrap justify-center text-[11px]">
+              <span className="text-slate-400">গোপনীয়তা নীতি</span>
+              <span className="text-slate-300">·</span>
+              <span className="text-slate-400">ব্যবহারের শর্তাবলী</span>
+              <span className="text-slate-300">·</span>
+              <span className="text-slate-400">পেমেন্ট পলিসি</span>
+              <span className="text-slate-300">·</span>
+              <button
+                onClick={() => setIsAdminOpen(true)}
+                className="btn-secondary h-7 px-2.5 text-[11px] text-[#667085] hover:text-[#101828] cursor-pointer inline-flex items-center gap-1"
+                title="Admin Control Panel"
+              >
+                <Lock className="w-3 h-3" />
+                <span>Admin Login</span>
+              </button>
+            </div>
           </div>
-
-          <div className="text-xs text-[#667085] flex flex-col md:flex-row items-center justify-center gap-3">
-            <span>© {new Date().getFullYear()} Unity Earning. All rights reserved.</span>
-            <button
-              onClick={() => setIsAdminOpen(true)}
-              className="btn-secondary h-8 px-2.5 text-[11px] text-[#667085] hover:text-[#101828]"
-              title="Admin Login"
-            >
-              <Lock className="w-3 h-3" />
-              <span>Admin Login</span>
-            </button>
-          </div>
-
         </div>
       </footer>
 

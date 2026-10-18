@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, BellRing, X, GraduationCap, Sparkles, CheckCircle2, Flame, Gift, ArrowRight } from 'lucide-react';
+import { Bell, BellRing, X, GraduationCap, Sparkles, CheckCircle2, Flame, Gift, ArrowRight, Send } from 'lucide-react';
+import { WhatsAppIcon } from './WhatsAppIcon';
 import { triggerSuccessFeedback } from '../utils/confettiFeedback';
 
 interface NavbarProps {
@@ -167,18 +168,45 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </nav>
 
-        {/* Notification Bell Section - Slim Button */}
-        <div className="relative shrink-0" ref={notificationRef}>
-          <button
-            onClick={handleToggleNotifications}
-            aria-label="অফার নোটিফিকেশন"
-            title="লাইভ অফার নোটিফিকেশন"
-            className={`relative p-2 sm:p-2.2 rounded-xl transition-all cursor-pointer border ${
-              isNotificationOpen
-                ? 'bg-[#EEF3FF] text-[#315CF5] border-[#315CF5]/40 shadow-xs'
-                : 'bg-white hover:bg-slate-50 text-slate-700 hover:text-[#315CF5] border-[#E4E7EC] shadow-2xs'
-            }`}
-          >
+        {/* Right Controls: WhatsApp, Telegram & Notification Bell */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Quick Support Links (Hidden on small mobile, visible sm+) */}
+          <div className="hidden sm:flex items-center gap-1.5">
+            <a
+              href="https://whatsapp.com/channel/0029VbB4RqI3mFY5nkzbCs0p"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-emerald h-8 px-2.5 text-[11px] font-bold rounded-lg flex items-center gap-1"
+              title="WhatsApp সাপোর্ট চ্যানেল"
+            >
+              <WhatsAppIcon size={13} className="w-3.5 h-3.5 text-white" />
+              <span className="hidden md:inline">WhatsApp</span>
+            </a>
+
+            <a
+              href="https://t.me/unityearning12"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-telegram h-8 px-2.5 text-[11px] font-bold rounded-lg flex items-center gap-1"
+              title="Telegram সাপোর্ট চ্যানেল"
+            >
+              <Send className="w-3 h-3 text-white" />
+              <span className="hidden md:inline">Telegram</span>
+            </a>
+          </div>
+
+          {/* Notification Bell Section - Slim Button */}
+          <div className="relative shrink-0" ref={notificationRef}>
+            <button
+              onClick={handleToggleNotifications}
+              aria-label="অফার নোটিফিকেশন"
+              title="লাইভ অফার নোটিফিকেশন"
+              className={`relative p-2 sm:p-2.2 rounded-xl transition-all cursor-pointer border ${
+                isNotificationOpen
+                  ? 'bg-[#EEF3FF] text-[#315CF5] border-[#315CF5]/40 shadow-xs'
+                  : 'bg-white hover:bg-slate-50 text-slate-700 hover:text-[#315CF5] border-[#E4E7EC] shadow-2xs'
+              }`}
+            >
             {hasUnread ? (
               <BellRing className="w-4.5 h-4.5 sm:w-5 sm:h-5 animate-bounce text-[#315CF5]" />
             ) : (
@@ -293,6 +321,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
     </header>
