@@ -1,167 +1,301 @@
-import React from 'react';
-import { Send, ShieldCheck, Sparkles, CheckCircle2, Award, Calendar } from 'lucide-react';
-import { WhatsAppIcon } from './WhatsAppIcon';
+import React, { useState, useRef, useEffect } from 'react';
+import { Bell, BellRing, X, GraduationCap, Sparkles, CheckCircle2, Flame, Gift, ArrowRight } from 'lucide-react';
 import { triggerSuccessFeedback } from '../utils/confettiFeedback';
-import { getTodayBengaliDate } from '../utils/dateUtils';
 
 interface NavbarProps {
   onOpenActivation: () => void;
   activeSection: string;
   setActiveSection: (section: string) => void;
   onOpenAdmin: () => void;
+  currentPrice: number;
+  availableSeats: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   onOpenActivation,
   activeSection,
   setActiveSection,
-  onOpenAdmin
+  onOpenAdmin,
+  currentPrice,
+  availableSeats,
 }) => {
-  const TELEGRAM_LINK = "https://t.me/unityearning12";
-  const WHATSAPP_CHANNEL_LINK = "https://whatsapp.com/channel/0029VbB4RqI3mFY5nkzbCs0p";
-  const todayDate = getTodayBengaliDate();
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [hasUnread, setHasUnread] = useState(true);
+  const notificationRef = useRef<HTMLDivElement>(null);
 
-  const handleActivationClick = () => {
+  // Close notification popover when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setIsNotificationOpen(false);
+      }
+    };
+    if (isNotificationOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isNotificationOpen]);
+
+  const handleToggleNotifications = () => {
+    setIsNotificationOpen((prev) => !prev);
+    if (!isNotificationOpen) {
+      setHasUnread(false);
+    }
+  };
+
+  const handleClaimOffer = () => {
+    setIsNotificationOpen(false);
     triggerSuccessFeedback({ x: 0.8, y: 0.1 });
     onOpenActivation();
   };
 
+  const savingsAmount = Math.max(0, 1100 - currentPrice);
+
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-xs font-['Hind_Siliguri'] overflow-x-clip">
-      
-      {/* Top Cashback Announcement Banner */}
-      <div className="bg-slate-900 text-slate-100 text-xs py-2 px-4 sm:px-6 border-b border-slate-800">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
-          
-          {/* Left Aligned: 300 TK Cashback Announcement */}
-          <div className="flex items-center gap-2 text-left text-xs sm:text-[13px] min-w-0">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0 animate-pulse" />
-            <span className="font-normal text-slate-100 truncate">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E4E7EC] shadow-[0_1px_3px_0_rgba(16,24,40,0.04)] font-['Hind_Siliguri']">
+      {/* 1. Promotional Announcement Bar */}
+      <div className="bg-[#101828] text-white text-xs py-2 px-3 sm:px-6 border-b border-slate-800">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 text-xs sm:text-[13px]">
+          <div className="flex items-center gap-2 truncate">
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-slate-200 truncate">
               মেম্বারশিপ ক্যাশব্যাক অফার: <strong className="text-amber-300 font-bold">৩০০ ৳ ইনস্ট্যান্ট ক্যাশব্যাক</strong> নিশ্চিত!
             </span>
           </div>
 
-          {/* Right Badges */}
-          <div className="hidden sm:flex items-center gap-2 shrink-0 text-[11px]">
-            <span className="inline-flex items-center gap-1 text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+          <div className="hidden md:flex items-center gap-3 shrink-0 text-[11px] text-slate-300">
+            <span className="inline-flex items-center gap-1.5 text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span>লাইভ অফার সচল</span>
             </span>
-            <span className="inline-flex items-center gap-1 text-slate-300 bg-slate-800 px-2.5 py-0.5 rounded-full border border-slate-700">
-              <CheckCircle2 className="w-3 h-3 text-indigo-400" />
-              <span>ভেরিফাইড প্ল্যাটফর্ম</span>
+            <span className="text-slate-600">·</span>
+            <span className="inline-flex items-center gap-1 text-slate-300">
+              <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
+              <span>ভেরিফাইড এডুকেশন প্ল্যাটফর্ম</span>
             </span>
           </div>
-
         </div>
       </div>
 
-      {/* Main Brand Navbar */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2">
-        {/* Brand Header Click for Admin Password Modal */}
-        <div 
-          className="flex items-center cursor-pointer group select-none py-0.5 min-w-0"
+      {/* 2. Main Brand Navbar */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-4">
+        {/* Beautifully Formatted Full Company Name & Brand Mark */}
+        <div
           onClick={onOpenAdmin}
-          title="অ্যাডমিন প্যানেলের জন্য ক্লিক করুন"
+          className="cursor-pointer select-none flex items-center gap-3 group min-w-0"
+          title="অ্যাডমিন প্যানেল"
         >
-          <div className="min-w-0">
-            <div className="font-['Outfit'] font-extrabold text-lg sm:text-2xl leading-none tracking-tight text-slate-900 flex items-center gap-1 sm:gap-1.5 uppercase truncate">
-              UNITY <span className="text-indigo-600 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">EARNING</span>
+          {/* Brand Emblem Icon */}
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-[#315CF5] via-[#254EDB] to-[#4F73F7] flex items-center justify-center text-white shadow-md shadow-[#315CF5]/25 border border-white/20 group-hover:scale-105 transition-transform shrink-0">
+            <GraduationCap className="w-6 h-6 sm:w-6.5 sm:h-6.5" />
+          </div>
+
+          {/* Full Prominent Brand Name */}
+          <div className="flex flex-col justify-center min-w-0">
+            <div className="font-['Plus_Jakarta_Sans',sans-serif] font-black text-xl sm:text-2xl md:text-3xl tracking-tight leading-none text-[#101828] flex items-center gap-1.5 uppercase">
+              <span>UNITY</span>
+              <span className="text-[#315CF5]">EARNING</span>
             </div>
-            <div className="text-[10px] sm:text-xs text-indigo-700 font-bold tracking-wider uppercase mt-0.5">
-              E-Learning Platform
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
+              <span className="text-xs sm:text-[13px] font-black tracking-wider text-[#315CF5] uppercase leading-none">
+                E-LEARNING PLATFORM
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#079669] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#079669] animate-pulse"></span>
+                OFFICIAL
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Desktop Nav Links */}
-        <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-600 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80">
+        {/* Desktop Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-[#667085]">
           <button
             onClick={() => setActiveSection('card')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`transition-colors py-1 cursor-pointer whitespace-nowrap ${
               activeSection === 'card'
-                ? 'bg-white text-indigo-700 font-bold shadow-xs'
-                : 'hover:text-slate-900 hover:bg-white/60'
+                ? 'text-[#315CF5] font-bold border-b-2 border-[#315CF5]'
+                : 'hover:text-[#101828]'
             }`}
           >
             অফার ড্যাশবোর্ড
           </button>
           <button
             onClick={() => setActiveSection('courses')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`transition-colors py-1 cursor-pointer whitespace-nowrap ${
               activeSection === 'courses'
-                ? 'bg-white text-indigo-700 font-bold shadow-xs'
-                : 'hover:text-slate-900 hover:bg-white/60'
+                ? 'text-[#315CF5] font-bold border-b-2 border-[#315CF5]'
+                : 'hover:text-[#101828]'
             }`}
           >
-            কোর্স পোর্টফোলিও
+            কোর্সসমূহ
           </button>
           <button
             onClick={() => setActiveSection('reviews')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`transition-colors py-1 cursor-pointer whitespace-nowrap ${
               activeSection === 'reviews'
-                ? 'bg-white text-indigo-700 font-bold shadow-xs'
-                : 'hover:text-slate-900 hover:bg-white/60'
+                ? 'text-[#315CF5] font-bold border-b-2 border-[#315CF5]'
+                : 'hover:text-[#101828]'
             }`}
           >
             শিক্ষার্থীদের মতামত
           </button>
           <button
             onClick={() => setActiveSection('calculator')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`transition-colors py-1 cursor-pointer whitespace-nowrap ${
               activeSection === 'calculator'
-                ? 'bg-white text-indigo-700 font-bold shadow-xs'
-                : 'hover:text-slate-900 hover:bg-white/60'
+                ? 'text-[#315CF5] font-bold border-b-2 border-[#315CF5]'
+                : 'hover:text-[#101828]'
             }`}
           >
             আয় ক্যালকুলেটর
           </button>
           <button
             onClick={() => setActiveSection('faq')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`transition-colors py-1 cursor-pointer whitespace-nowrap ${
               activeSection === 'faq'
-                ? 'bg-white text-indigo-700 font-bold shadow-xs'
-                : 'hover:text-slate-900 hover:bg-white/60'
+                ? 'text-[#315CF5] font-bold border-b-2 border-[#315CF5]'
+                : 'hover:text-[#101828]'
             }`}
           >
             প্রশ্নোত্তর
           </button>
         </nav>
 
-        {/* Action Buttons - Safe sizing to ensure Telegram never overflows */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {/* Notification Bell Section (Replaces the top activation button) */}
+        <div className="relative shrink-0" ref={notificationRef}>
           <button
-            onClick={handleActivationClick}
-            className="hidden md:inline-flex items-center gap-1.5 text-xs font-bold bg-slate-50 hover:bg-white text-slate-800 px-3 py-1.5 sm:py-2 rounded-xl transition-all border border-slate-200 hover:text-indigo-600 hover:border-indigo-200 cursor-pointer shadow-2xs"
+            onClick={handleToggleNotifications}
+            aria-label="অফার নোটিফিকেশন"
+            title="লাইভ অফার নোটিফিকেশন"
+            className={`relative p-2.5 sm:p-3 rounded-xl transition-all cursor-pointer border ${
+              isNotificationOpen
+                ? 'bg-[#EEF3FF] text-[#315CF5] border-[#315CF5]/40 shadow-sm'
+                : 'bg-white hover:bg-slate-50 text-slate-700 hover:text-[#315CF5] border-[#E4E7EC] shadow-2xs'
+            }`}
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>আইডি এক্টিভেশন</span>
+            {hasUnread ? (
+              <BellRing className="w-5 h-5 sm:w-5.5 sm:h-5.5 animate-bounce text-[#315CF5]" />
+            ) : (
+              <Bell className="w-5 h-5 sm:w-5.5 sm:h-5.5" />
+            )}
+
+            {/* Glowing Unread Indicator Badge */}
+            {hasUnread && (
+              <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-4 w-4 bg-rose-600 text-white text-[9px] font-black items-center justify-center">
+                  ১
+                </span>
+              </span>
+            )}
           </button>
 
-          <a
-            href={WHATSAPP_CHANNEL_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => window.open(WHATSAPP_CHANNEL_LINK, '_blank', 'noopener,noreferrer')}
-            className="inline-flex items-center gap-1.5 neu-btn-emerald text-white text-xs font-bold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl transition-all cursor-pointer shadow-2xs shrink-0"
-            title="হোয়াটসঅ্যাপ পেমেন্ট গ্রুপ ও চ্যানেল"
-          >
-            <WhatsAppIcon size={14} className="w-3.5 h-3.5 text-white shrink-0" />
-            <span className="hidden sm:inline">হোয়াটসঅ্যাপ</span>
-          </a>
+          {/* Notification Popover Dropdown Card */}
+          {isNotificationOpen && (
+            <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              {/* Header */}
+              <div className="bg-[#101828] text-white p-3.5 sm:p-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="p-1.5 rounded-lg bg-[#315CF5] text-white">
+                    <Sparkles className="w-4 h-4" />
+                  </span>
+                  <div>
+                    <h4 className="text-sm font-extrabold leading-none">নোটিফিকেশন সেন্টার</h4>
+                    <span className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      লাইভ আপডেট সচল
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsNotificationOpen(false)}
+                  className="p-1 rounded-lg hover:bg-white/10 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
 
-          <a
-            href={TELEGRAM_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 neu-btn-blue text-white text-xs font-bold px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition-all shadow-2xs shrink-0"
-            title="টেলিগ্রাম চ্যানেল ও সাপোর্ট"
-          >
-            <Send className="w-3.5 h-3.5 fill-white shrink-0" />
-            <span>টেলিগ্রাম</span>
-          </a>
+              {/* Notification Content List */}
+              <div className="p-3 sm:p-4 space-y-3 max-h-[75vh] overflow-y-auto">
+                {/* 1. Primary Dynamic Price Offer Notification */}
+                <div className="p-3.5 rounded-xl bg-gradient-to-br from-blue-50 via-white to-blue-50/50 border border-blue-200/80 shadow-xs">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-black text-[#315CF5] bg-[#EEF3FF] px-2 py-0.5 rounded-full">
+                      <Flame className="w-3.5 h-3.5 fill-[#315CF5]" />
+                      <span>আজকের বিশেষ অফার</span>
+                    </span>
+                    <span className="text-[10px] text-slate-500 font-medium">লাইভ আপডেট</span>
+                  </div>
+
+                  <p className="text-xs sm:text-sm text-[#101828] font-bold leading-snug">
+                    রেগুলার ফি <span className="line-through text-red-500 font-extrabold">৳১,১০০</span> টাকার পরিবর্তে এখন মাত্র{' '}
+                    <span className="text-[#315CF5] font-black text-base sm:text-lg">৳{currentPrice}</span> টাকায় লাইফটাইম অ্যাডমিশন চলছে!
+                  </p>
+
+                  <p className="text-[11px] text-[#667085] mt-1">
+                    অ্যাডমিন কর্তৃক নির্ধারিত ছাড়: আপনি পাচ্ছেন সরাসরি{' '}
+                    <strong className="text-[#079669]">৳{savingsAmount} টাকা</strong> ছাড়।
+                  </p>
+
+                  <button
+                    onClick={handleClaimOffer}
+                    className="mt-3 w-full py-2 px-3 rounded-xl bg-[#315CF5] hover:bg-[#254EDB] text-white text-xs font-black flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                  >
+                    <span>অফারটি গ্রহণ করুন</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {/* 2. ৳300 Instant Cashback Alert */}
+                <div className="p-3 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0] flex items-start gap-2.5">
+                  <div className="p-2 rounded-lg bg-[#079669] text-white shrink-0 mt-0.5">
+                    <Gift className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1">
+                    <h5 className="text-xs font-black text-[#065F46]">৩০০ ৳ নিশ্চিত ইনস্ট্যান্ট ক্যাশব্যাক</h5>
+                    <p className="text-[11px] text-[#047857] mt-0.5 leading-relaxed">
+                      আজকের দিনে যেকোনো কোর্সে সফল অ্যাডমিশন নিলেই পাচ্ছেন নগদ বা বিকাশ একাউন্টে ৩০০ টাকা ইনস্ট্যান্ট ক্যাশব্যাক বোনাস।
+                    </p>
+                  </div>
+                </div>
+
+                {/* 3. Limited Seats Live Alert */}
+                <div className="p-3 rounded-xl bg-[#FFFBEB] border border-[#FDE68A] flex items-start gap-2.5">
+                  <div className="p-2 rounded-lg bg-amber-500 text-white shrink-0 mt-0.5">
+                    <Flame className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h5 className="text-xs font-black text-[#92400E]">আসন সংখ্যা সীমিত</h5>
+                      <span className="text-[11px] font-mono font-black text-amber-900 bg-white px-2 py-0.5 rounded border border-amber-300">
+                        {availableSeats} টি বাকি
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
+                      আজকের স্পেশাল ডিসকাউন্ট কোটায় কেবল {availableSeats} টি সিট অবশিষ্ট রয়েছে। কোটা পূর্ণ হলে রেগুলার ফি কার্যকর হবে।
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Popover Footer */}
+              <div className="p-2.5 bg-slate-50 border-t border-slate-100 text-center">
+                <span className="text-[11px] text-slate-500 font-semibold flex items-center justify-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#079669]" />
+                  <span>সকল অফার রিয়েল-টাইম অ্যাডমিন সিস্টেম দ্বারা ভেরিফাইড</span>
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>
   );
 };
+

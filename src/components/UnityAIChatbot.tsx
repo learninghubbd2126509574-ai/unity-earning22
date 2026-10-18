@@ -212,77 +212,76 @@ export const UnityAIChatbot: React.FC<UnityAIChatbotProps> = ({
 
   return (
     <>
-      {/* Floating Action Buttons (Realistic WhatsApp + Unity Chat Bot Launcher) */}
-      <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end gap-2.5 font-['Hind_Siliguri']">
+      {/* Floating Action Suite on the Bottom-Right (ডান পাশে নিচে) */}
+      <div className="fixed bottom-18 md:bottom-6 right-3.5 md:right-6 z-40 flex flex-col items-end gap-2.5 font-['Hind_Siliguri'] select-none">
         
-        {/* Floating Realistic WhatsApp Channel & Payment Group Button */}
+        {/* 1. Floating WhatsApp Button */}
         <div className="group relative flex items-center">
-          {/* Tooltip on hover / desktop badge */}
-          <div className="hidden group-hover:flex absolute right-full mr-2.5 items-center whitespace-nowrap bg-slate-900/95 text-white text-xs font-bold py-1.5 px-3 rounded-xl shadow-xl border border-emerald-500/30 backdrop-blur-xs animate-fade-in gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <div className="flex flex-col text-left">
-              <span className="text-white font-bold text-[11px] leading-tight">হোয়াটসঅ্যাপ চ্যানেল ও গ্রুপ</span>
-              <span className="text-emerald-400 font-medium text-[9px] leading-tight">ক্লিক করে যুক্ত হোন</span>
-            </div>
+          <div className="hidden group-hover:flex absolute right-full mr-2.5 items-center whitespace-nowrap bg-[#101828] text-white text-xs font-bold py-1.5 px-3 rounded-xl shadow-lg border border-[#079669]/40 gap-1.5 transition-all">
+            <span className="w-2 h-2 rounded-full bg-[#25D366] animate-pulse" />
+            <span>WhatsApp সাপোর্ট</span>
           </div>
 
           <a
             href={WHATSAPP_CHANNEL_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={(e) => {
-              window.open(WHATSAPP_CHANNEL_LINK, '_blank', 'noopener,noreferrer');
-            }}
-            className="group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gradient-to-tr from-[#128C7E] via-[#25D366] to-[#2BF776] text-white shadow-lg shadow-emerald-500/35 hover:shadow-emerald-500/50 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer border-2 border-white"
-            aria-label="Join WhatsApp Payment Group and Channel"
-            title="হোয়াটসঅ্যাপ পেমেন্ট গ্রুপ ও চ্যানেলে যুক্ত হোন"
+            className="flex items-center justify-center w-11 h-11 md:w-12 md:h-12 rounded-full bg-[#25D366] hover:bg-[#20BD5A] text-white shadow-lg shadow-[#25D366]/30 hover:scale-108 active:scale-95 transition-all duration-200 cursor-pointer border-2 border-white"
+            aria-label="WhatsApp সাপোর্ট"
+            title="WhatsApp সাপোর্ট ও চ্যানেল"
           >
-            {/* Online notification dot */}
-            <span className="absolute top-0 right-0 flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-400 border border-white"></span>
+            <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border border-white"></span>
             </span>
-
-            {/* Realistic WhatsApp Vector Icon */}
-            <WhatsAppIcon size={24} className="w-6 h-6 sm:w-6.5 sm:h-6.5 drop-shadow-xs transition-transform group-hover:scale-105" />
+            <WhatsAppIcon size={22} className="w-5.5 h-5.5 text-white drop-shadow-xs" />
           </a>
         </div>
 
-        {/* Helper popup pill for Chatbot when closed */}
-        {!isOpen && (
-          <div 
-            onClick={() => setIsOpen(true)}
-            className="hidden sm:flex items-center gap-2 bg-white text-slate-800 text-xs font-bold py-1.5 px-3.5 rounded-full shadow-lg border border-blue-200 cursor-pointer hover:border-blue-400 hover:shadow-xl transition-all animate-bounce"
-          >
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
-            <span>💬 Unity Chat Bot — সাহায্য নিন!</span>
+        {/* 2. Floating Telegram Button */}
+        <div className="group relative flex items-center">
+          <div className="hidden group-hover:flex absolute right-full mr-2.5 items-center whitespace-nowrap bg-[#101828] text-white text-xs font-bold py-1.5 px-3 rounded-xl shadow-lg border border-[#315CF5]/40 gap-1.5 transition-all">
+            <span className="w-2 h-2 rounded-full bg-[#315CF5] animate-pulse" />
+            <span>Telegram চ্যানেল</span>
           </div>
-        )}
 
-        {/* Unity Chat Bot Launcher Button */}
-        <button
-          onClick={() => setIsOpen(prev => !prev)}
-          className="group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/35 hover:shadow-blue-500/50 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer border-2 border-white"
-          aria-label="Unity Chat Bot"
-          title="Unity Chat Bot — সাহায্য নিন"
-        >
-          {/* Live pulsing dot */}
-          <span className="absolute top-0 right-0 flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border border-white"></span>
-          </span>
+          <a
+            href={TELEGRAM_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center w-11 h-11 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-[#0088CC] to-[#29B6F6] hover:from-[#0077B5] hover:to-[#0288D1] text-white shadow-lg shadow-[#0088CC]/30 hover:scale-108 active:scale-95 transition-all duration-200 cursor-pointer border-2 border-white"
+            aria-label="Telegram চ্যানেল"
+            title="Telegram চ্যানেল (@unityearning12)"
+          >
+            <Send className="w-5 h-5 fill-white -translate-x-0.5 translate-y-0.5" />
+          </a>
+        </div>
 
-          {isOpen ? (
-            <X className="w-5 h-5 sm:w-5.5 sm:h-5.5 transition-transform group-hover:rotate-90" />
-          ) : (
-            <Bot className="w-5.5 h-5.5 sm:w-6 sm:h-6 drop-shadow-xs transition-transform group-hover:scale-105" />
-          )}
-        </button>
+        {/* 3. Unity Chat Bot Launcher Button */}
+        <div className="group relative flex items-center">
+          <div className="hidden group-hover:flex absolute right-full mr-2.5 items-center whitespace-nowrap bg-[#101828] text-white text-xs font-bold py-1.5 px-3 rounded-xl shadow-lg border border-[#315CF5]/40 gap-1.5 transition-all">
+            <span>Unity Chat Bot</span>
+          </div>
+
+          <button
+            onClick={() => setIsOpen(prev => !prev)}
+            className="flex items-center justify-center w-11 h-11 md:w-12 md:h-12 rounded-full bg-[#315CF5] hover:bg-[#254EDB] text-white shadow-lg shadow-[#315CF5]/30 hover:scale-108 active:scale-95 transition-all duration-200 cursor-pointer border-2 border-white"
+            aria-label="Unity Chat Bot"
+            title="Unity Chat Bot — সাহায্য নিন"
+          >
+            {isOpen ? (
+              <X className="w-5 h-5 transition-transform" />
+            ) : (
+              <Bot className="w-5 h-5 drop-shadow-xs" />
+            )}
+          </button>
+        </div>
+
       </div>
 
       {/* Interactive Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-22 right-4 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[410px] max-h-[580px] h-[82vh] bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-fade-in font-['Hind_Siliguri']">
+        <div className="fixed bottom-22 md:bottom-22 right-3 md:right-6 z-50 w-[calc(100vw-24px)] sm:w-[400px] max-h-[560px] h-[78vh] bg-white rounded-2xl shadow-xl border border-[#E4E7EC] flex flex-col overflow-hidden animate-fade-in font-['Hind_Siliguri']">
           
           {/* Header Bar */}
           <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700 text-white p-4 flex items-center justify-between shadow-md">

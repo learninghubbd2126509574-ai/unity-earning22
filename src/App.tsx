@@ -164,7 +164,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-['Hind_Siliguri']">
+    <div className="min-h-screen bg-[#F6F8FC] text-[#101828] flex flex-col font-['Hind_Siliguri']">
       
       {/* Top Header Navigation */}
       <Navbar
@@ -172,6 +172,8 @@ export default function App() {
         activeSection={activeSection}
         setActiveSection={setActiveSection}
         onOpenAdmin={() => setIsAdminOpen(true)}
+        currentPrice={currentPrice}
+        availableSeats={availableSeats}
       />
 
       {/* Main Content Sections */}
@@ -251,28 +253,29 @@ export default function App() {
 
       </main>
 
-      {/* Modern Clean Footer */}
-      <footer className="bg-white border-t border-slate-200 text-slate-600 text-xs py-8 px-4 mt-8 pb-24 sm:pb-8 shadow-xs">
+      {/* Modern Clean Footer (Stripe / Coursera style) */}
+      <footer className="bg-white border-t border-[#E4E7EC] text-[#667085] text-xs py-8 px-4 mt-12 pb-24 sm:pb-8">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
           
           <div>
-            <div className="text-slate-900 font-['Outfit'] font-extrabold text-lg flex items-center justify-center md:justify-start gap-1.5 uppercase tracking-tight">
-              <span>UNITY <span className="text-indigo-600">EARNING</span></span>
+            <div className="font-['Plus_Jakarta_Sans',sans-serif] font-extrabold text-lg flex items-center justify-center md:justify-start gap-1.5 uppercase tracking-tight text-[#101828]">
+              <span>UNITY</span>
+              <span className="text-[#315CF5]">EARNING</span>
             </div>
-            <div className="text-[11px] text-indigo-700 font-bold uppercase tracking-wider mt-0.5">
+            <div className="text-[10px] text-[#315CF5] font-bold uppercase tracking-wider mt-0.5">
               E-Learning Platform
             </div>
-            <p className="text-xs text-slate-500 mt-1 max-w-sm font-normal">
-              Unity Earning E-Learning Platform - নির্ভরযোগ্য ফ্রিল্যান্সিং স্কিল ও অনলাইন ক্যারিয়ার হাব।
+            <p className="text-xs text-[#667085] mt-1 max-w-sm font-normal">
+              Unity Earning E-Learning Platform - নির্ভরযোগ্য আইটি স্কিল ও অনলাইন ক্যারিয়ার হাব।
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2.5 text-slate-600 text-xs font-semibold">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 text-xs font-semibold">
             <a 
               href="https://t.me/unityearning12" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="bg-blue-50 text-blue-700 px-3.5 py-1.5 rounded-xl border border-blue-200 hover:bg-blue-100 flex items-center gap-1.5 font-bold cursor-pointer transition-colors shadow-2xs"
+              className="btn-telegram h-9 px-3 text-xs"
             >
               <Send className="w-3.5 h-3.5" />
               <span>@unityearning12</span>
@@ -282,23 +285,23 @@ export default function App() {
               href="https://whatsapp.com/channel/0029VbB4RqI3mFY5nkzbCs0p" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="neu-btn-emerald text-white px-3.5 py-1.5 rounded-xl border border-emerald-300/40 flex items-center gap-1.5 font-bold cursor-pointer shadow-2xs"
+              className="btn-emerald h-9 px-3 text-xs"
             >
               <WhatsAppIcon size={14} className="w-3.5 h-3.5 text-white" />
               <span>হোয়াটসঅ্যাপ চ্যানেল</span>
             </a>
 
-            <span className="bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-lg font-bold border border-emerald-200">
+            <span className="bg-[#ECFDF5] text-[#079669] px-3 py-1.5 rounded-lg font-bold border border-[#A7F3D0]">
               ক্যাশব্যাক: ৩০০৳
             </span>
           </div>
 
-          <div className="text-xs text-slate-500 flex flex-col md:flex-row items-center justify-center gap-3">
+          <div className="text-xs text-[#667085] flex flex-col md:flex-row items-center justify-center gap-3">
             <span>© {new Date().getFullYear()} Unity Earning. All rights reserved.</span>
             <button
               onClick={() => setIsAdminOpen(true)}
-              className="bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1 cursor-pointer border border-slate-200"
-              title="Admin Login (212650)"
+              className="btn-secondary h-8 px-2.5 text-[11px] text-[#667085] hover:text-[#101828]"
+              title="Admin Login"
             >
               <Lock className="w-3 h-3" />
               <span>Admin Login</span>
@@ -309,11 +312,11 @@ export default function App() {
       </footer>
 
       {/* Mobile Native App Bottom Navigation Dock (Fixed bottom bar) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-2 flex items-center justify-around shadow-[0_-4px_16px_rgba(0,0,0,0.06)] safe-area-bottom">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E4E7EC] py-1.5 px-2 flex items-center justify-around shadow-[0_-2px_10px_rgba(16,24,40,0.05)] safe-area-bottom">
         <button
           onClick={() => { setActiveSection('card'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
-            activeSection === 'card' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+          className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all cursor-pointer min-h-[44px] ${
+            activeSection === 'card' ? 'text-[#315CF5] font-bold' : 'text-[#667085] hover:text-[#101828]'
           }`}
         >
           <Sparkles className="w-4 h-4 mb-0.5" />
@@ -322,8 +325,8 @@ export default function App() {
 
         <button
           onClick={() => { setActiveSection('courses'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
-            activeSection === 'courses' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+          className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all cursor-pointer min-h-[44px] ${
+            activeSection === 'courses' ? 'text-[#315CF5] font-bold' : 'text-[#667085] hover:text-[#101828]'
           }`}
         >
           <BookOpen className="w-4 h-4 mb-0.5" />
@@ -332,8 +335,8 @@ export default function App() {
 
         <button
           onClick={() => { setActiveSection('reviews'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
-            activeSection === 'reviews' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+          className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all cursor-pointer min-h-[44px] ${
+            activeSection === 'reviews' ? 'text-[#315CF5] font-bold' : 'text-[#667085] hover:text-[#101828]'
           }`}
         >
           <MessageSquare className="w-4 h-4 mb-0.5" />
@@ -342,8 +345,8 @@ export default function App() {
 
         <button
           onClick={() => { setActiveSection('calculator'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
-            activeSection === 'calculator' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+          className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all cursor-pointer min-h-[44px] ${
+            activeSection === 'calculator' ? 'text-[#315CF5] font-bold' : 'text-[#667085] hover:text-[#101828]'
           }`}
         >
           <Calculator className="w-4 h-4 mb-0.5" />
@@ -352,8 +355,8 @@ export default function App() {
 
         <button
           onClick={() => { setActiveSection('faq'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
-            activeSection === 'faq' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+          className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all cursor-pointer min-h-[44px] ${
+            activeSection === 'faq' ? 'text-[#315CF5] font-bold' : 'text-[#667085] hover:text-[#101828]'
           }`}
         >
           <HelpCircle className="w-4 h-4 mb-0.5" />

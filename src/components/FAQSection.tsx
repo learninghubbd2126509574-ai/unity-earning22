@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FAQS } from '../data/platformData';
 import { HelpCircle, ChevronDown, ChevronUp, Send, ShieldCheck } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
+import { MotionReveal } from './MotionReveal';
 
 interface FAQSectionProps {
   onOpenActivation: () => void;
@@ -22,95 +23,96 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
   const WHATSAPP_CHANNEL_LINK = "https://whatsapp.com/channel/0029VbB4RqI3mFY5nkzbCs0p";
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12 font-['Hind_Siliguri']">
-      <div className="text-center max-w-xl mx-auto mb-8 sm:mb-10">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-xs font-semibold text-indigo-800 mb-2.5 border border-indigo-200/80 shadow-2xs">
-          <HelpCircle className="w-3.5 h-3.5 text-indigo-600" />
+    <div className="max-w-4xl mx-auto px-4 py-10 sm:py-14 font-['Hind_Siliguri']">
+      <MotionReveal distance={16} className="text-center max-w-xl mx-auto mb-8 sm:mb-10">
+        <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#315CF5] mb-2">
+          <HelpCircle className="w-4 h-4 text-[#315CF5]" />
           <span>সাধারণ জিজ্ঞাসা ও উত্তর</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">সচরাচর জিজ্ঞাসিত প্রশ্নসমূহ</h2>
-        <p className="text-xs sm:text-sm text-slate-600 mt-1.5 font-normal leading-relaxed">
+        <h2 className="text-2xl sm:text-3xl font-bold text-[#101828] tracking-tight">সচরাচর জিজ্ঞাসিত প্রশ্নসমূহ</h2>
+        <p className="text-xs sm:text-sm text-[#667085] mt-1.5 font-normal leading-relaxed">
           আপনার কোনো প্রশ্ন থাকলে নিচের উত্তরগুলো দেখতে পারেন অথবা সরাসরি টেলিগ্রাম ও হোয়াটসঅ্যাপে যোগাযোগ করতে পারেন
         </p>
-      </div>
+      </MotionReveal>
 
-      <div className="space-y-2.5 mb-8">
-        {FAQS.map((faq) => {
+      <div className="space-y-3 mb-8">
+        {FAQS.map((faq, idx) => {
           const isOpen = openId === faq.id;
           return (
-            <div
+            <MotionReveal
               key={faq.id}
-              className={`rounded-2xl border transition-all duration-200 ${
+              delay={idx * 0.05}
+              distance={12}
+              className={`rounded-xl border transition-all duration-200 ${
                 isOpen 
-                  ? 'bg-slate-50 border-indigo-200 shadow-2xs' 
-                  : 'bg-white border-slate-200 hover:border-slate-300'
+                  ? 'bg-white border-[#315CF5] shadow-xs' 
+                  : 'bg-white border-[#E4E7EC] hover:border-[#D0D5DD]'
               }`}
             >
               <button
                 onClick={() => toggle(faq.id)}
-                className="w-full p-4 sm:p-4.5 text-left font-bold text-xs sm:text-sm text-slate-800 flex items-center justify-between gap-3 cursor-pointer"
+                className="w-full p-4 sm:p-5 text-left font-bold text-xs sm:text-sm text-[#101828] flex items-center justify-between gap-3 cursor-pointer"
               >
                 <span>{faq.question}</span>
                 {isOpen ? (
-                  <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
+                  <div className="w-6 h-6 rounded-md bg-[#EEF3FF] flex items-center justify-center text-[#315CF5] shrink-0">
                     <ChevronUp className="w-4 h-4" />
                   </div>
                 ) : (
-                  <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
+                  <div className="w-6 h-6 rounded-md bg-[#F6F8FC] flex items-center justify-center text-[#667085] shrink-0">
                     <ChevronDown className="w-4 h-4" />
                   </div>
                 )}
               </button>
-
               {isOpen && (
-                <div className="px-4 sm:px-4.5 pb-4 text-xs sm:text-[13px] text-slate-600 leading-relaxed pt-0.5 border-t border-slate-200/60">
-                  {faq.answer}
+                <div className="px-4 pb-4 sm:px-5 sm:pb-5 text-xs sm:text-[13px] text-[#667085] border-t border-[#E4E7EC] pt-3 font-normal leading-relaxed">
+                  {faq.answer.replace('৫৯৯', `${currentPrice}`).replace('499', `${currentPrice}`).replace('599', `${currentPrice}`)}
                 </div>
               )}
-            </div>
+            </MotionReveal>
           );
         })}
       </div>
 
-      {/* Support Help Banner */}
-      <div className="bg-white rounded-2xl p-6 sm:p-8 text-center space-y-3 border border-slate-200 shadow-2xs">
-        <h3 className="text-base sm:text-lg font-bold text-slate-900">
-          আরও কিছু জানতে সরাসরি কথা বলুন আমাদের কাউন্সিলরের সাথে
+      {/* Support Box */}
+      <MotionReveal distance={20} className="card-premium p-6 sm:p-7 bg-white border border-[#E4E7EC] rounded-2xl text-center">
+        <h3 className="text-base font-bold text-[#101828] mb-1">
+          আরও কিছু জানতে চান?
         </h3>
-        <p className="text-xs text-slate-600 max-w-md mx-auto font-normal leading-relaxed">
-          আমাদের সাপোর্ট টিম ২৪/৭ লাইভ মেসেজের জন্য প্রস্তুত। বিকাশ বা নগদে পেমেন্ট ও একাউন্ট এক্টিভেশনে তাৎক্ষণিক সহায়তা নিন।
+        <p className="text-xs text-[#667085] mb-4">
+          আমাদের অফিসিয়াল সাপোর্ট টিম সার্বক্ষণিক সহায়তা দিতে প্রস্তুত
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
-          <a
-            href={TELEGRAM_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="neu-btn-blue text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all cursor-pointer shadow-xs"
-          >
-            <Send className="w-4 h-4 fill-white" />
-            <span>টেলিগ্রামে মেসেজ (@unityearning12)</span>
-          </a>
-
+        <div className="flex flex-wrap items-center justify-center gap-3">
           <a
             href={WHATSAPP_CHANNEL_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            className="neu-btn-emerald text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all cursor-pointer shadow-xs"
+            className="btn-emerald h-11 px-4 text-xs font-bold"
           >
             <WhatsAppIcon size={16} className="w-4 h-4 text-white" />
-            <span>হোয়াটসঅ্যাপ চ্যানেল</span>
+            <span>WhatsApp সাপোর্ট</span>
+          </a>
+
+          <a
+            href={TELEGRAM_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-telegram h-11 px-4 text-xs font-bold"
+          >
+            <Send className="w-4 h-4" />
+            <span>Telegram চ্যানেল</span>
           </a>
 
           <button
             onClick={onOpenActivation}
-            className="neu-btn-primary text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+            className="btn-primary h-11 px-4 text-xs font-bold cursor-pointer"
           >
             <ShieldCheck className="w-4 h-4" />
-            <span>পেমেন্ট সাবমিট ({currentPrice}৳)</span>
+            <span>আইডি এক্টিভেশন ফর্ম</span>
           </button>
         </div>
-      </div>
+      </MotionReveal>
     </div>
   );
 };

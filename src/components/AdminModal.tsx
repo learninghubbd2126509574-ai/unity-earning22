@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Lock, CheckCircle2, Save, Calendar, Zap, Users, Minus, Plus, Video, Phone, Play, ExternalLink } from 'lucide-react';
+import { X, Lock, CheckCircle2, Save, Calendar, Zap, Users, Minus, Plus, Video, Phone, Play, ExternalLink, Eye, EyeOff } from 'lucide-react';
 import {
   PricingSettings,
   loadPricingSettings,
@@ -42,6 +42,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   onUpdateSettings
 }) => {
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   
@@ -90,7 +91,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       setCurrentNagad(settings.nagadNumber || nagadNumber || DEFAULT_NAGAD_NUMBER);
       setCurrentUpay(settings.upayNumber || upayNumber || DEFAULT_UPAY_NUMBER);
     } else {
-      setErrorMsg('ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড বা Admin ID (212650) দিন।');
+      setErrorMsg('ভুল পাসওয়ার্ড! সঠিক সিক্রেট পাসওয়ার্ড দিন।');
     }
   };
 
@@ -130,6 +131,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
   const handleClose = () => {
     setPassword('');
+    setShowPassword(false);
     setIsAuthenticated(false);
     setErrorMsg('');
     setSaveSuccess(false);
@@ -168,17 +170,27 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
                   সিক্রেট অ্যাডমিন পাসওয়ার্ড / Admin ID:
                 </label>
-                <input
-                  type="password"
-                  placeholder="পাসওয়ার্ড বা Admin ID দিন (212650)..."
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setErrorMsg('');
-                  }}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition-colors shadow-2xs placeholder:text-slate-400"
-                  autoFocus
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="সিক্রেট পাসওয়ার্ড বা Admin ID লিখুন..."
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setErrorMsg('');
+                    }}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-3.5 pr-10 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition-colors shadow-2xs placeholder:text-slate-400"
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer p-1"
+                    title={showPassword ? 'পাসওয়ার্ড লুকান' : 'পাসওয়ার্ড দেখুন'}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               {errorMsg && (
@@ -194,8 +206,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 <span>লগইন করুন</span>
               </button>
 
-              <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-[11px] text-slate-500 text-center">
-                🔒 ডিফল্ট Admin ID / পাসওয়ার্ড: <strong className="text-slate-800 font-mono">212650</strong>
+              <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-[11px] text-slate-500 text-center flex items-center justify-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-slate-400" />
+                <span>শুধুমাত্র অনুমোদিত অ্যাডমিনের জন্য সংরক্ষিত</span>
               </div>
             </form>
           </div>

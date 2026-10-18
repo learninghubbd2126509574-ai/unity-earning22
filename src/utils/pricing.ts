@@ -4,6 +4,7 @@ export interface PricingSettings {
   availableSeats: number;
   videoUrl?: string;
   nagadNumber?: string;
+  rocketNumber?: string;
   upayNumber?: string;
 }
 
@@ -12,11 +13,13 @@ const STORAGE_KEY_MANUAL_PRICE = 'unity_manual_price';
 const STORAGE_KEY_AVAILABLE_SEATS = 'unity_available_seats';
 const STORAGE_KEY_VIDEO_URL = 'unity_bkash_video_url';
 const STORAGE_KEY_NAGAD_NUMBER = 'unity_nagad_number';
+const STORAGE_KEY_ROCKET_NUMBER = 'unity_rocket_number';
 const STORAGE_KEY_UPAY_NUMBER = 'unity_upay_number';
 
 export const DEFAULT_AVAILABLE_SEATS = 41;
 export const DEFAULT_VIDEO_URL = 'https://www.youtube.com/watch?v=ScMzIvxBSi4';
 export const DEFAULT_NAGAD_NUMBER = '01339786909';
+export const DEFAULT_ROCKET_NUMBER = '01339786909';
 export const DEFAULT_UPAY_NUMBER = '01339786909';
 
 /**
@@ -86,6 +89,7 @@ export function loadPricingSettings(): PricingSettings {
     const seatsStored = localStorage.getItem(STORAGE_KEY_AVAILABLE_SEATS);
     const videoStored = localStorage.getItem(STORAGE_KEY_VIDEO_URL);
     const nagadStored = localStorage.getItem(STORAGE_KEY_NAGAD_NUMBER);
+    const rocketStored = localStorage.getItem(STORAGE_KEY_ROCKET_NUMBER);
     const upayStored = localStorage.getItem(STORAGE_KEY_UPAY_NUMBER);
 
     const isAutoPricing = autoStored === null ? true : autoStored === 'true';
@@ -93,6 +97,7 @@ export function loadPricingSettings(): PricingSettings {
     const availableSeats = seatsStored ? parseInt(seatsStored, 10) || DEFAULT_AVAILABLE_SEATS : DEFAULT_AVAILABLE_SEATS;
     const videoUrl = videoStored && videoStored.trim() ? videoStored : DEFAULT_VIDEO_URL;
     const nagadNumber = nagadStored && nagadStored.trim() ? nagadStored : DEFAULT_NAGAD_NUMBER;
+    const rocketNumber = rocketStored && rocketStored.trim() ? rocketStored : DEFAULT_ROCKET_NUMBER;
     const upayNumber = upayStored && upayStored.trim() ? upayStored : DEFAULT_UPAY_NUMBER;
 
     return {
@@ -101,6 +106,7 @@ export function loadPricingSettings(): PricingSettings {
       availableSeats: isNaN(availableSeats) ? DEFAULT_AVAILABLE_SEATS : availableSeats,
       videoUrl,
       nagadNumber,
+      rocketNumber,
       upayNumber,
     };
   } catch {
@@ -110,6 +116,7 @@ export function loadPricingSettings(): PricingSettings {
       availableSeats: DEFAULT_AVAILABLE_SEATS,
       videoUrl: DEFAULT_VIDEO_URL,
       nagadNumber: DEFAULT_NAGAD_NUMBER,
+      rocketNumber: DEFAULT_ROCKET_NUMBER,
       upayNumber: DEFAULT_UPAY_NUMBER,
     };
   }
@@ -125,6 +132,9 @@ export function savePricingSettings(settings: PricingSettings): void {
     }
     if (settings.nagadNumber) {
       localStorage.setItem(STORAGE_KEY_NAGAD_NUMBER, settings.nagadNumber);
+    }
+    if (settings.rocketNumber) {
+      localStorage.setItem(STORAGE_KEY_ROCKET_NUMBER, settings.rocketNumber);
     }
     if (settings.upayNumber) {
       localStorage.setItem(STORAGE_KEY_UPAY_NUMBER, settings.upayNumber);

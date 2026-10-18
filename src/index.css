@@ -1,125 +1,155 @@
 @import "tailwindcss";
 
 @layer base {
+  :root {
+    --brand-blue: #315CF5;
+    --brand-navy: #101828;
+    --brand-emerald: #079669;
+    --brand-bg: #F6F8FC;
+    --brand-secondary: #667085;
+    --brand-border: #E4E7EC;
+    --brand-accent-blue: #EEF3FF;
+  }
+
   body {
     font-family: 'Hind Siliguri', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    background-color: #F8FAFC;
-    background-image: 
-      radial-gradient(at 15% 15%, rgba(79, 70, 229, 0.04) 0px, transparent 50%),
-      radial-gradient(at 85% 15%, rgba(16, 185, 129, 0.04) 0px, transparent 50%),
-      radial-gradient(at 50% 85%, rgba(245, 158, 11, 0.03) 0px, transparent 50%);
-    color: #1E293B;
+    background-color: #F6F8FC;
+    color: #101828;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #101828;
   }
 }
 
-/* Modern App Depth & Surface Utilities */
-.neu-flat {
-  background: #FFFFFF;
-  box-shadow: 0 4px 20px -2px rgba(148, 163, 184, 0.25), 0 2px 6px -1px rgba(148, 163, 184, 0.15);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+/* Tabular Numerals for accurate time, currency & seat figures */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
-.neu-flat-sm {
-  background: #FFFFFF;
-  box-shadow: 0 2px 10px -1px rgba(148, 163, 184, 0.2), 0 1px 3px -1px rgba(148, 163, 184, 0.1);
-  border: 1px solid rgba(226, 232, 240, 0.85);
+/* Button & Card Utilities */
+.card-premium {
+  background-color: #FFFFFF;
+  border: 1px solid #E4E7EC;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(16, 24, 40, 0.04), 0 1px 2px -1px rgba(16, 24, 40, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.neu-flat-xs {
-  background: #FFFFFF;
-  box-shadow: 0 1px 4px 0 rgba(148, 163, 184, 0.15);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+.card-premium:hover {
+  border-color: #D0D5DD;
+  box-shadow: 0 4px 12px -2px rgba(16, 24, 40, 0.06), 0 2px 4px -2px rgba(16, 24, 40, 0.04);
 }
 
-.neu-inset {
-  background: #F1F5F9;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: inset 0 2px 4px 0 rgba(148, 163, 184, 0.15);
+/* Primary Action Button (#315CF5) */
+.btn-primary {
+  background-color: #315CF5;
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
 }
 
-.neu-inset-sm {
-  background: #F1F5F9;
-  border: 1px solid rgba(226, 232, 240, 0.7);
-  box-shadow: inset 0 1px 2px 0 rgba(148, 163, 184, 0.1);
-}
-
-.neu-btn {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.neu-btn:hover {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.08);
+.btn-primary:hover {
+  background-color: #254EDB;
+  box-shadow: 0 4px 8px -2px rgba(49, 92, 245, 0.25);
   transform: translateY(-1px);
 }
 
-.neu-btn:active {
-  background: #F1F5F9;
-  box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-  transform: translateY(1px);
+.btn-primary:active {
+  background-color: #1D3DB8;
+  transform: translateY(0);
 }
 
-.neu-btn-primary {
-  background: linear-gradient(135deg, #4F46E5, #3B82F6);
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.2s ease;
+/* Secondary Button (#FFFFFF / Border #E4E7EC) */
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: #101828;
+  font-weight: 600;
+  border: 1px solid #E4E7EC;
+  border-radius: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.03);
 }
 
-.neu-btn-primary:hover {
-  background: linear-gradient(135deg, #4338CA, #2563EB);
-  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.45);
+.btn-secondary:hover {
+  background-color: #F8FAFC;
+  border-color: #D0D5DD;
+  color: #101828;
   transform: translateY(-1px);
 }
 
-.neu-btn-primary:active {
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
-  transform: translateY(1px);
+.btn-secondary:active {
+  background-color: #F1F5F9;
+  transform: translateY(0);
 }
 
-.neu-btn-emerald {
-  background: linear-gradient(135deg, #059669, #10B981);
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.2s ease;
+/* Emerald Support Button (#079669) */
+.btn-emerald {
+  background-color: #079669;
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
 }
 
-.neu-btn-emerald:hover {
-  background: linear-gradient(135deg, #047857, #059669);
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
+.btn-emerald:hover {
+  background-color: #067A55;
+  box-shadow: 0 4px 8px -2px rgba(7, 150, 105, 0.25);
   transform: translateY(-1px);
 }
 
-.neu-btn-emerald:active {
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
-  transform: translateY(1px);
+.btn-emerald:active {
+  background-color: #045D40;
+  transform: translateY(0);
 }
 
-.neu-btn-blue {
-  background: linear-gradient(135deg, #0284C7, #0088CC);
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.2s ease;
+/* Telegram CTA Button */
+.btn-telegram {
+  background-color: #EEF3FF;
+  color: #315CF5;
+  font-weight: 700;
+  border: 1px solid #D0DCFD;
+  border-radius: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.neu-btn-blue:hover {
-  background: linear-gradient(135deg, #0369A1, #0077B5);
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45);
+.btn-telegram:hover {
+  background-color: #315CF5;
+  color: #FFFFFF;
+  border-color: #315CF5;
   transform: translateY(-1px);
 }
 
-.neu-btn-blue:active {
-  transform: translateY(1px);
+.btn-telegram:active {
+  transform: translateY(0);
+}
+
+/* Safe area padding for mobile bottom bar */
+.safe-area-bottom {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
 }
 
 /* Custom scrollbar styling */
@@ -128,17 +158,16 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #F6F8FC;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #D0D5DD;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #98A2B3;
 }
 
-/* Hide scrollbar for carousel while preserving scrolling */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -146,19 +175,3 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
-/* Gentle floating, scaling & breathing animation for the price amount */
-@keyframes pricePulseFloat {
-  0%, 100% {
-    transform: translateY(0px) scale(1);
-  }
-  50% {
-    transform: translateY(-3px) scale(1.06);
-  }
-}
-
-.animate-price-pulse {
-  animation: pricePulseFloat 2.6s ease-in-out infinite;
-  display: inline-flex;
-}
-

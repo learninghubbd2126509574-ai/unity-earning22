@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unity Earning - Premium Platform</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Inter:wght@400;500;700&display=swap');
+
+        :root {
+            --bg-color: #070E27;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --nagad: #f97316;
+            --rocket: #a21caf;
+            --upay: #2563eb;
+            --green: #10b981;
+        }
+
+        body {
+            font-family: 'Inter', 'Hind Siliguri', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 450px;
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Badges */
+        .badges { display: flex; gap: 10px; margin-bottom: 20px; }
+        .badge { font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+        .badge-offer { background: #fef3c7; color: #b45309; }
+        .badge-life { background: #dcfce7; color: #15803d; }
+
+        /* Seats & Date */
+        .meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .meta-box { background: #f8fafc; padding: 12px; border-radius: 12px; text-align: center; }
+        .meta-box span { display: block; font-size: 0.9rem; color: #64748b; }
+        .meta-box strong { font-size: 1.1rem; color: var(--text-main); }
+
+        /* Pricing Card */
+        .price-card { border: 2px solid #e2e8f0; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 25px; }
+        .old-price { text-decoration: line-through; color: #94a3b8; font-size: 1rem; }
+        .main-price { font-size: 2.5rem; font-weight: 700; color: var(--text-main); margin: 10px 0; }
+        .price-details { text-align: left; line-height: 1.6; color: #475569; font-size: 0.95rem; }
+
+        /* Payments */
+        .payment-row { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; }
+        .brand-name { font-weight: 700; width: 80px; }
+        .phone { font-family: 'Courier New', monospace; font-weight: 700; }
+        .copy-btn { background: #f1f5f9; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        
+        .nagad { border-left: 4px solid var(--nagad); }
+        .rocket { border-left: 4px solid var(--rocket); }
+        .upay { border-left: 4px solid var(--upay); }
+
+        /* Activation */
+        .activate-btn { width: 100%; background: var(--green); color: white; padding: 16px; border-radius: 12px; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="badges">
+        <span class="badge badge-offer">Special Offer</span>
+        <span class="badge badge-life">Lifetime Access</span>
+    </div>
+
+    <div class="meta-row">
+        <div class="meta-box"><span>আসন বাকি</span><strong>৪১</strong></div>
+        <div class="meta-box"><span>তারিখ</span><strong>Oct 16, 2026</strong></div>
+    </div>
+
+    <div class="price-card">
+        <span class="old-price">Regular Fee: ৳৭,৫০০</span> <span class="badge badge-offer">55% OFF</span>
+        <div class="main-price">499৳</div>
+        <div style="color: #64748b; margin-bottom: 15px;">/ এককালীন ফি</div>
+        <div class="price-details">
+            • One-time payment<br>
+            • Lifetime access<br>
+            • ৳300 Cashback included
+        </div>
+    </div>
+
+    <div class="payment-row nagad"><span class="brand-name" style="color:var(--nagad)">Nagad</span><span class="phone">01700-000000</span><button class="copy-btn">Copy</button></div>
+    <div class="payment-row rocket"><span class="brand-name" style="color:var(--rocket)">Rocket</span><span class="phone">01800-000000</span><button class="copy-btn">Copy</button></div>
+    <div class="payment-row upay"><span class="brand-name" style="color:var(--upay)">Upay</span><span class="phone">01900-000000</span><button class="copy-btn">Copy</button></div>
+
+    <button class="activate-btn">✓ Account Activation</button>
+</div>
+
+</body>
+</html>
