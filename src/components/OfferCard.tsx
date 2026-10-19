@@ -233,8 +233,16 @@ export const OfferCard: React.FC<OfferCardProps> = ({
                   </span>
                 </div>
 
+                {/* Instant 300 Taka Cashback Badge */}
+                <div className="mt-2.5 flex items-center justify-center">
+                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-black shadow-xs">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>ইনস্ট্যান্ট ৩০০ টাকা ক্যাশব্যাক</span>
+                  </span>
+                </div>
+
                 {/* Clean Single Line for Seat Count - Zero Jumble */}
-                <div className="mt-3.5 flex items-center justify-center">
+                <div className="mt-2.5 flex items-center justify-center">
                   <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-bold">
                     <span className="relative flex h-2 w-2 shrink-0">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
